@@ -29,7 +29,7 @@ public class MekanismCrusherProcessor extends Processor {
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
         for (var recipe : recipes) {
-            if (Config.exceptions.contains(recipe.id())) {
+            if (Config.isExcluded(recipe.id())) {
                 continue;
             }
 
