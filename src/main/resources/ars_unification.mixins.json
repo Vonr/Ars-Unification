@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "ars_unification.refmap.json",
   "mixins": [
-    "RecipeManagerAccessor"
+    "RecipeManagerAccessor",
+    "RecipeManagerMixin"
   ],
   "client": [
   ],
