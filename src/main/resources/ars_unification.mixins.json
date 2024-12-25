@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.qther.ars_unification.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "ars_unification.refmap.json",
+  "mixins": [
+    "RecipeManagerAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
