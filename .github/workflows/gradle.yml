@@ -45,4 +45,3 @@ jobs:
           version: ${{ env.VERSION }}
           game-versions: |
             >=${{ env.MC_MIN_VER }} <=${{ env.MC_MAX_VER }}
-          version-resolver: exact
