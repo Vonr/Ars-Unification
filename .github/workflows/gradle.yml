@@ -41,10 +41,8 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: 1165429
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-commitish: ${{ github.head_ref || github.ref_name }}
-          name: Ars Unification ${{ inputs.version }} for ${{ env.MC_MAX_VER }}
+          name: Ars Unification ${{ env.VERSION }} for ${{ env.MC_MAX_VER }}
           version: ${{ env.VERSION }}
           game-versions: |
-            >=${{ env.MC_MIN_VER }} <${{ env.MC_MAX_VER }}
+            >=${{ env.MC_MIN_VER }} <=${{ env.MC_MAX_VER }}
           version-resolver: exact
