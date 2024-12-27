@@ -1,0 +1,47 @@
+name: Publish on GitHub, CurseForge and Modrinth
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      "*"
+
+env:
+  MC_MIN_VER: '1.21'
+  MC_MAX_VER: '1.21.1'
+  JAVA_VERSION: 21
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get version from tag
+        run: |
+          echo "VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: "temurin"
+      - name: Setup and Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean runData build
+      - uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: fRdwEsp6
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 1165429
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-commitish: ${{ github.head_ref || github.ref_name }}
+          name: Ars Unification ${{ inputs.version }} for ${{ env.MC_MAX_VER }}
+          version: ${{ env.VERSION }}
+          game-versions: |
+            >=${{ env.MC_MIN_VER }} <${{ env.MC_MAX_VER }}
+          version-resolver: exact
