@@ -30,6 +30,9 @@ jobs:
           distribution: "temurin"
       - name: Setup and Build with Gradle
         uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_USER: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           arguments: clean runData build
       - uses: Kir-Antipov/mc-publish@v3.3
