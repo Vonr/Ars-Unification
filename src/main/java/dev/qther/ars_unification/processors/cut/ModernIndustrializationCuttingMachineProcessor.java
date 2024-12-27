@@ -1,11 +1,12 @@
-package dev.qther.ars_unification.processors.crush;
+package dev.qther.ars_unification.processors.cut;
 
+import aztech.modern_industrialization.MIFluids;
 import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -14,8 +15,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.Map;
 
-public class ModernIndustrializationMaceratorProcessor extends Processor {
-    public ModernIndustrializationMaceratorProcessor(RecipeManager recipeManager) {
+public class ModernIndustrializationCuttingMachineProcessor extends Processor {
+    public ModernIndustrializationCuttingMachineProcessor(RecipeManager recipeManager) {
         super(recipeManager);
     }
 
@@ -23,23 +24,29 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
     public void processRecipes() {
         super.processRecipes();
 
-        var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.getSortedRecipes(MIMachineRecipeTypes.MACERATOR);
+        var existing = ArsUnification.cutRecipesIngredientSet(recipeManager);
+        var recipes = this.getSortedRecipes(MIMachineRecipeTypes.CUTTING_MACHINE);
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
-        for (var recipe : recipes) {
+        nextRecipe: for (var recipe : recipes) {
             if (Config.isExcluded(recipe.id())) {
                 continue;
             }
 
-            var mace = recipe.value();
+            var mill = recipe.value();
 
-            if (!mace.fluidInputs.isEmpty() || !mace.fluidOutputs.isEmpty()) {
+            if (!mill.fluidOutputs.isEmpty()) {
                 continue;
             }
 
-            var ingredientList = mace.itemInputs;
+            for (var fluidIn : mill.fluidInputs) {
+                if (!fluidIn.fluid().isSame(MIFluids.LUBRICANT.asFluid())) {
+                    continue nextRecipe;
+                }
+            }
+
+            var ingredientList = mill.itemInputs;
             if (ingredientList.size() != 1) {
                 continue;
             }
@@ -63,8 +70,8 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : mill.itemOutputs) {
                         wrapper = wrapper.withItems(output.getStack(), output.probability());
                     }
 
@@ -80,8 +87,8 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : mill.itemOutputs) {
                         wrapper = wrapper.withItems(output.getStack(), output.probability());
                     }
 
@@ -98,8 +105,8 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                     continue;
                 }
 
-                var wrapper = new RecipeWrappers.Crush(recipe.id(), Ingredient.of(ing));
-                for (var output : mace.itemOutputs) {
+                var wrapper = new RecipeWrappers.Cut(recipe.id(), Ingredient.of(ing));
+                for (var output : mill.itemOutputs) {
                     wrapper = wrapper.withItems(output.getStack(), output.probability());
                 }
 

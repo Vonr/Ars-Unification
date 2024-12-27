@@ -1,21 +1,21 @@
-package dev.qther.ars_unification.processors.crush;
+package dev.qther.ars_unification.processors.cut;
 
-import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import vectorwing.farmersdelight.common.registry.ModRecipeTypes;
 
 import java.util.Map;
 
-public class ModernIndustrializationMaceratorProcessor extends Processor {
-    public ModernIndustrializationMaceratorProcessor(RecipeManager recipeManager) {
+public class FarmersDelightCuttingBoardProcessor extends Processor {
+    public FarmersDelightCuttingBoardProcessor(RecipeManager recipeManager) {
         super(recipeManager);
     }
 
@@ -23,8 +23,8 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
     public void processRecipes() {
         super.processRecipes();
 
-        var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.getSortedRecipes(MIMachineRecipeTypes.MACERATOR);
+        var existing = ArsUnification.cutRecipesIngredientSet(recipeManager);
+        var recipes = this.getSortedRecipes(ModRecipeTypes.CUTTING.get());
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
@@ -33,22 +33,14 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                 continue;
             }
 
-            var mace = recipe.value();
+            var board = recipe.value();
 
-            if (!mace.fluidInputs.isEmpty() || !mace.fluidOutputs.isEmpty()) {
-                continue;
-            }
-
-            var ingredientList = mace.itemInputs;
+            var ingredientList = board.getIngredients();
             if (ingredientList.size() != 1) {
                 continue;
             }
 
-            var first = ingredientList.getFirst();
-            var ingredients = first.ingredient();
-            if (ingredients.isEmpty() || first.amount() != 1) {
-                continue;
-            }
+            var ingredients = ingredientList.getFirst();
 
             if (!ingredients.isCustom()) {
                 var values = ingredients.getValues();
@@ -63,9 +55,9 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
-                        wrapper = wrapper.withItems(output.getStack(), output.probability());
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : board.getResults()) {
+                        wrapper = wrapper.withItems(output);
                     }
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
@@ -80,9 +72,9 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
-                        wrapper = wrapper.withItems(output.getStack(), output.probability());
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : board.getResults()) {
+                        wrapper = wrapper.withItems(output);
                     }
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
@@ -98,9 +90,9 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                     continue;
                 }
 
-                var wrapper = new RecipeWrappers.Crush(recipe.id(), Ingredient.of(ing));
-                for (var output : mace.itemOutputs) {
-                    wrapper = wrapper.withItems(output.getStack(), output.probability());
+                var wrapper = new RecipeWrappers.Cut(recipe.id(), Ingredient.of(ing));
+                for (var output : board.getResults()) {
+                    wrapper = wrapper.withItems(output);
                 }
 
                 var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());

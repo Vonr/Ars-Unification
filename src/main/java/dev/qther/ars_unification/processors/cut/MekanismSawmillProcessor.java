@@ -1,12 +1,12 @@
-package dev.qther.ars_unification.processors.crush;
+package dev.qther.ars_unification.processors.cut;
 
-import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import mekanism.api.recipes.MekanismRecipeTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -14,8 +14,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.Map;
 
-public class ModernIndustrializationMaceratorProcessor extends Processor {
-    public ModernIndustrializationMaceratorProcessor(RecipeManager recipeManager) {
+public class MekanismSawmillProcessor extends Processor {
+    public MekanismSawmillProcessor(RecipeManager recipeManager) {
         super(recipeManager);
     }
 
@@ -23,8 +23,8 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
     public void processRecipes() {
         super.processRecipes();
 
-        var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.getSortedRecipes(MIMachineRecipeTypes.MACERATOR);
+        var existing = ArsUnification.cutRecipesIngredientSet(recipeManager);
+        var recipes = this.getSortedRecipes(MekanismRecipeTypes.TYPE_SAWING.get());
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
@@ -33,20 +33,14 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                 continue;
             }
 
-            var mace = recipe.value();
-
-            if (!mace.fluidInputs.isEmpty() || !mace.fluidOutputs.isEmpty()) {
+            var saw = recipe.value();
+            var sized = saw.getInput().ingredient();
+            if (sized.count() != 1) {
                 continue;
             }
 
-            var ingredientList = mace.itemInputs;
-            if (ingredientList.size() != 1) {
-                continue;
-            }
-
-            var first = ingredientList.getFirst();
-            var ingredients = first.ingredient();
-            if (ingredients.isEmpty() || first.amount() != 1) {
+            var ingredients = sized.ingredient();
+            if (ingredients.isEmpty()) {
                 continue;
             }
 
@@ -63,9 +57,12 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
-                        wrapper = wrapper.withItems(output.getStack(), output.probability());
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : saw.getMainOutputDefinition()) {
+                        wrapper = wrapper.withItems(output.copy());
+                    }
+                    for (var output : saw.getSecondaryOutputDefinition()) {
+                        wrapper = wrapper.withItems(output.copy(), (float) saw.getSecondaryChance());
                     }
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
@@ -80,10 +77,14 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                         continue;
                     }
 
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mace.itemOutputs) {
-                        wrapper = wrapper.withItems(output.getStack(), output.probability());
+                    var wrapper = new RecipeWrappers.Cut(recipe.id(), ingredients);
+                    for (var output : saw.getMainOutputDefinition()) {
+                        wrapper = wrapper.withItems(output.copy());
                     }
+                    for (var output : saw.getSecondaryOutputDefinition()) {
+                        wrapper = wrapper.withItems(output.copy(), (float) saw.getSecondaryChance());
+                    }
+
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
                     toReplace.put(holder.id(), holder);
@@ -98,9 +99,12 @@ public class ModernIndustrializationMaceratorProcessor extends Processor {
                     continue;
                 }
 
-                var wrapper = new RecipeWrappers.Crush(recipe.id(), Ingredient.of(ing));
-                for (var output : mace.itemOutputs) {
-                    wrapper = wrapper.withItems(output.getStack(), output.probability());
+                var wrapper = new RecipeWrappers.Cut(recipe.id(), Ingredient.of(ing));
+                for (var output : saw.getMainOutputDefinition()) {
+                    wrapper = wrapper.withItems(output.copy());
+                }
+                for (var output : saw.getSecondaryOutputDefinition()) {
+                    wrapper = wrapper.withItems(output.copy(), (float) saw.getSecondaryChance());
                 }
 
                 var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());

@@ -35,6 +35,19 @@ public class Config {
 
     private static final ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_MACERATOR = BUILDER.comment("Priority of Modern Industrialization's Macerator recipes, -1 to disable").defineInRange("crush.modern_industrialization.macerator", 90, -1, 2147483647);
 
+
+    public static int mekanismSawMill;
+    public static int modernIndustrializationCuttingMachine;
+    public static int farmersDelightCuttingBoard;
+
+    private static final ModConfigSpec.IntValue MEKANISM_SAW_MILL = BUILDER.comment("Priority of Mekanism's Sawmill recipes, -1 to disable").defineInRange("cut.mekanism.sawmill", 100, -1, 2147483647);
+
+    private static final ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_CUTTING_MACHINE = BUILDER.comment("Priority of Modern Industrialization's Cutting Machine recipes, -1 to disable").defineInRange("cut.modern_industrialization.cutting_machine", -1, -1, 2147483647);
+
+    private static final ModConfigSpec.IntValue FARMERS_DELIGHT_CUTTING_BOARD = BUILDER.comment("Priority of Farmer's Delight's Cutting Board recipes, -1 to disable").defineInRange("cut.farmersdelight.cutting_board", 60, -1, 2147483647);
+
+
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public static Matcher exceptions;
@@ -80,6 +93,10 @@ public class Config {
         integratedDynamicsUseMechanical = INTEGRATEDDYNAMICS_USE_MECHANICAL.get();
         actuallyAdditionsCrusher = ACTUALLYADDITIONS_CRUSHER.get();
         modernIndustrializationMacerator = MODERN_INDUSTRIALIZATION_MACERATOR.get();
+
+        mekanismSawMill = MEKANISM_SAW_MILL.get();
+        modernIndustrializationCuttingMachine = MODERN_INDUSTRIALIZATION_CUTTING_MACHINE.get();
+        farmersDelightCuttingBoard = FARMERS_DELIGHT_CUTTING_BOARD.get();
     }
 
     public static boolean isExcluded(ResourceLocation id) {

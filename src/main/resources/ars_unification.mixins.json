@@ -6,7 +6,9 @@
   "refmap": "ars_unification.refmap.json",
   "mixins": [
     "RecipeManagerAccessor",
-    "RecipeManagerMixin"
+    "ars_nouveau.AbstractEffectMixin",
+    "ars_nouveau.AbstractSpellPartMixin",
+    "ars_nouveau.EffectCutMixin"
   ],
   "client": [
   ],

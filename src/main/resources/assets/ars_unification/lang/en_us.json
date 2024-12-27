@@ -1,5 +1,7 @@
 {
-  "itemGroup.ars_unification": "Example Mod Tab",
-  "block.ars_unification.example_block": "Example Block",
-  "item.ars_unification.example_item": "Example Item"
+  "ars_unification.cut_recipe": "Cut Glyph",
+
+  "ars_nouveau.augment_desc.glyph_cut_glyph_aoe": "Increases the radius in which to look for items to process.",
+  "ars_nouveau.augment_desc.glyph_cut_glyph_pierce": "Increases the number of items Cut will process.",
+  "ars_nouveau.augment_desc.glyph_cut_glyph_sensitive": "Cut will try to process items nearby."
 }

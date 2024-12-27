@@ -3,7 +3,7 @@ package dev.qther.ars_unification.processors.crush;
 import com.enderio.machines.common.init.MachineRecipes;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -24,7 +24,7 @@ public class EnderIOSAGMillProcessor extends Processor {
         super.processRecipes();
 
         var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
+        var recipes = this.getSortedRecipes(MachineRecipes.SAG_MILLING.type().get());
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
@@ -60,6 +60,9 @@ public class EnderIOSAGMillProcessor extends Processor {
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
                     toReplace.put(holder.id(), holder);
+                    for (var input : tag.getItems()) {
+                        existing.add(input.getItem());
+                    }
 
                     continue;
                 } else if (value instanceof Ingredient.ItemValue item) {
@@ -74,6 +77,7 @@ public class EnderIOSAGMillProcessor extends Processor {
 
                     var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
                     toReplace.put(holder.id(), holder);
+                    existing.add(item.item().getItem());
 
                     continue;
                 }
@@ -91,6 +95,7 @@ public class EnderIOSAGMillProcessor extends Processor {
 
                 var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
                 toReplace.put(holder.id(), holder);
+                existing.add(ing.getItem());
             }
         }
 
