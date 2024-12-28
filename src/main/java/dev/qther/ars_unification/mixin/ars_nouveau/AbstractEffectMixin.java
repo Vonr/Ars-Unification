@@ -15,5 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class AbstractEffectMixin extends AbstractSpellPartMixin {
     @WrapMethod(method = "onResolve")
     public void wrapResolve(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, Operation<Void> original) {
+        original.call(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
     }
 }
