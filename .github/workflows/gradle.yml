@@ -37,7 +37,7 @@ jobs:
           arguments: clean build
       - name: Generate changelog
         run: |
-          printf "Auto-generated Changelog:\n%s" "$(git log "$(git describe --tags --abbrev=0 HEAD~1)..HEAD~1" --oneline | awk '{ $1="-"; print $0 }')" > .ci-changelog.md
+          printf "Auto-generated Changelog:\n%s" "$(git log "$(git describe --tags --abbrev=0 HEAD~1)..HEAD~1" --oneline | awk '! / (ci|ver|internal)([:,. ]|$)/ { $1="-"; print $0 }')" > .ci-changelog.md
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: fRdwEsp6
