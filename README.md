@@ -5,10 +5,10 @@ Lets Ars Nouveau take recipes from other mods.
 Currently, the mod will take Crush and Cut type recipes and let the respective glyphs use them.
 I will **not** be adding multi-way recipe-stealing.
 
-Ars Nouveau's base recipes will always take priority over ones from other mods.
+Recipes made specifically for Ars Nouveau will always take priority over ones from other mods.
 
 Other mods' recipes can have their priorities configured in the common config file.
-Specific recipes can also be disabled from being taken by putting their ID in the config.
+Specific recipes can also be disabled from being taken by putting matching Regular Expressions in the config.
 You can obtain a recipe's ID using [EMI](https://modrinth.com/mod/emi).
 
 Supported mods:
