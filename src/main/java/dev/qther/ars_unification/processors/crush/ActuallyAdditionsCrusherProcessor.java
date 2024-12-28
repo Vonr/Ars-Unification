@@ -1,101 +1,41 @@
 package dev.qther.ars_unification.processors.crush;
 
 import de.ellpeck.actuallyadditions.mod.crafting.ActuallyRecipes;
+import de.ellpeck.actuallyadditions.mod.crafting.CrushingRecipe;
 import dev.qther.ars_unification.ArsUnification;
-import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
-import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Set;
 
-public class ActuallyAdditionsCrusherProcessor extends Processor {
+public class ActuallyAdditionsCrusherProcessor extends Processor<RecipeInput, CrushingRecipe> {
     public ActuallyAdditionsCrusherProcessor(RecipeManager recipeManager) {
-        super(recipeManager);
+        super(recipeManager, ActuallyRecipes.Types.CRUSHING.get());
     }
 
     @Override
-    public void processRecipes() {
-        super.processRecipes();
+    public Set<Item> getExistingInputs() {
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+    }
 
-        var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.getSortedRecipes(ActuallyRecipes.Types.CRUSHING.get());
+    @Override
+    public @Nullable Ingredient getIngredient(CrushingRecipe recipe) {
+        return recipe.getInput();
+    }
 
-        Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
+    @Override
+    public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends CrushingRecipe> recipeHolder, Ingredient ingredient) {
+        var recipe = recipeHolder.value();
+        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient)
+                .withItems(recipe.getOutputOne(), recipe.getFirstChance())
+                .withItems(recipe.getOutputTwo(), recipe.getSecondChance());
 
-        for (var recipe : recipes) {
-            if (Config.isExcluded(recipe.id())) {
-                continue;
-            }
-
-            var crush = recipe.value();
-
-            var ingredients = crush.getInput();
-            if (ingredients.isEmpty()) {
-                continue;
-            }
-
-            if (!ingredients.isCustom()) {
-                var values = ingredients.getValues();
-                if (values.length != 1) {
-                    continue;
-                }
-
-                var value = values[0];
-
-                if (value instanceof Ingredient.TagValue tag) {
-                    if (tag.getItems().isEmpty() || tag.getItems().stream().anyMatch(i -> existing.contains(i.getItem()))) {
-                        continue;
-                    }
-
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients)
-                        .withItems(crush.getOutputOne(), crush.getFirstChance())
-                        .withItems(crush.getOutputTwo(), crush.getSecondChance());
-
-                    var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                    toReplace.put(holder.id(), holder);
-                    for (var input : tag.getItems()) {
-                        existing.add(input.getItem());
-                    }
-
-                    continue;
-                } else if (value instanceof Ingredient.ItemValue item) {
-                    if (item.item().isEmpty() || existing.contains(item.item().getItem())) {
-                        continue;
-                    }
-
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients)
-                            .withItems(crush.getOutputOne(), crush.getFirstChance())
-                            .withItems(crush.getOutputTwo(), crush.getSecondChance());
-
-                    var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                    toReplace.put(holder.id(), holder);
-                    existing.add(item.item().getItem());
-
-                    continue;
-                }
-            }
-
-            for (var ing : ingredients.getItems()) {
-                if (ing.isEmpty() || ing.getCount() != 1 || existing.contains(ing.getItem())) {
-                    continue;
-                }
-
-                var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients)
-                        .withItems(crush.getOutputOne(), crush.getFirstChance())
-                        .withItems(crush.getOutputTwo(), crush.getSecondChance());
-
-                var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                toReplace.put(holder.id(), holder);
-                existing.add(ing.getItem());
-            }
-        }
-
-        this.recipeManager.replaceRecipes(toReplace.values());
+        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
     }
 }

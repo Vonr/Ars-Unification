@@ -1,104 +1,40 @@
 package dev.qther.ars_unification.processors.crush;
 
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.SagMillingRecipe;
 import dev.qther.ars_unification.ArsUnification;
-import dev.qther.ars_unification.Config;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
-import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import dev.qther.ars_unification.processors.Processor;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import dev.qther.ars_unification.recipe.RecipeWrappers;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Set;
 
-public class EnderIOSAGMillProcessor extends Processor {
+public class EnderIOSAGMillProcessor extends Processor<SagMillingRecipe.Input, SagMillingRecipe> {
     public EnderIOSAGMillProcessor(RecipeManager recipeManager) {
-        super(recipeManager);
+        super(recipeManager, MachineRecipes.SAG_MILLING.type().get());
     }
 
     @Override
-    public void processRecipes() {
-        super.processRecipes();
+    public Set<Item> getExistingInputs() {
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+    }
 
-        var existing = ArsUnification.crushRecipesIngredientSet(recipeManager);
-        var recipes = this.getSortedRecipes(MachineRecipes.SAG_MILLING.type().get());
+    @Override
+    public @Nullable Ingredient getIngredient(SagMillingRecipe recipe) {
+        return recipe.input();
+    }
 
-        Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
-
-        for (var recipe : recipes) {
-            if (Config.isExcluded(recipe.id())) {
-                continue;
-            }
-
-            var mill = recipe.value();
-
-            var ingredients = mill.input();
-            if (ingredients.isEmpty()) {
-                continue;
-            }
-
-            if (!ingredients.isCustom()) {
-                var values = ingredients.getValues();
-                if (values.length != 1) {
-                    continue;
-                }
-
-                var value = values[0];
-
-                if (value instanceof Ingredient.TagValue tag) {
-                    if (tag.getItems().isEmpty() || tag.getItems().stream().anyMatch(i -> existing.contains(i.getItem()))) {
-                        continue;
-                    }
-
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mill.outputs()) {
-                        wrapper = wrapper.withItems(output.getItemStack(), output.chance());
-                    }
-
-                    var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                    toReplace.put(holder.id(), holder);
-                    for (var input : tag.getItems()) {
-                        existing.add(input.getItem());
-                    }
-
-                    continue;
-                } else if (value instanceof Ingredient.ItemValue item) {
-                    if (item.item().isEmpty() || existing.contains(item.item().getItem())) {
-                        continue;
-                    }
-
-                    var wrapper = new RecipeWrappers.Crush(recipe.id(), ingredients);
-                    for (var output : mill.outputs()) {
-                        wrapper = wrapper.withItems(output.getItemStack(), output.chance());
-                    }
-
-                    var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                    toReplace.put(holder.id(), holder);
-                    existing.add(item.item().getItem());
-
-                    continue;
-                }
-            }
-
-            for (var ing : ingredients.getItems()) {
-                if (ing.isEmpty() || ing.getCount() != 1 || existing.contains(ing.getItem())) {
-                    continue;
-                }
-
-                var wrapper = new RecipeWrappers.Crush(recipe.id(), Ingredient.of(ing));
-                for (var output : mill.outputs()) {
-                    wrapper = wrapper.withItems(output.getItemStack(), output.chance());
-                }
-
-                var holder = new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
-                toReplace.put(holder.id(), holder);
-                existing.add(ing.getItem());
-            }
+    @Override
+    public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends SagMillingRecipe> recipeHolder, Ingredient ingredient) {
+        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient);
+        for (var output : recipeHolder.value().outputs()) {
+            wrapper = wrapper.withItems(output.getItemStack(), output.chance());
         }
 
-        this.recipeManager.replaceRecipes(toReplace.values());
+        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
     }
 }
