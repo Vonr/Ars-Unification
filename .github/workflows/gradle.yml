@@ -35,6 +35,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           arguments: clean build
+      - name: Generate changelog
+        run: |
+          printf "Auto-generated Changelog:\n%s" "$(git log "$(git describe --tags --abbrev=0 HEAD~1)..HEAD~1" --oneline | awk '{ $1="-"; print $0 }')" > .ci-changelog.md
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: fRdwEsp6
@@ -45,3 +48,4 @@ jobs:
           version: ${{ env.VERSION }}
           game-versions: |
             >=${{ env.MC_MIN_VER }} <=${{ env.MC_MAX_VER }}
+          changelog-file: .ci-changelog.md
