@@ -19,7 +19,7 @@ public class IntegratedDynamicsSqueezerProcessor extends Processor<CraftingInput
     public IntegratedDynamicsSqueezerProcessor(RecipeManager recipeManager) {
         super(
                 recipeManager,
-                Config.integratedDynamicsUseMechanical
+                Config.CONFIG.INTEGRATEDDYNAMICS_USE_MECHANICAL.get()
                         ? RegistryEntries.RECIPETYPE_MECHANICAL_SQUEEZER.get()
                         : RegistryEntries.RECIPETYPE_SQUEEZER.get()
         );

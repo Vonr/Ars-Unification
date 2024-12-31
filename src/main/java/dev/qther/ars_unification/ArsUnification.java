@@ -18,6 +18,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class ArsUnification {
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     public ArsUnification(IEventBus modEventBus, ModContainer modContainer) {
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC);
         NeoForge.EVENT_BUS.register(this);
 
         AURecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
@@ -47,25 +48,30 @@ public class ArsUnification {
         processRecipes(event.getPlayerList().getServer().getRecipeManager());
     }
     
-    record ProcessorInfo(int priority, String modid, Function<RecipeManager, Processor> constructor) {}
+    record ProcessorInfo(ModConfigSpec.IntValue priority, String modid, Function<RecipeManager, Processor> constructor) {}
+
+    private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
+    static {
+        // Crush
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_CRUSHER, "mekanism", MekanismCrusherProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ENDERIO_SAG_MILL, "enderio_machines", EnderIOSAGMillProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.INTEGRATEDDYNAMICS_SQUEEZER, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ACTUALLYADDITIONS_CRUSHER, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
+
+        // Cut
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAW_MILL, "mekanism", MekanismSawmillProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
+    }
+
 
     public static void processRecipes(RecipeManager recipeManager) {
         var mods = ModList.get();
-        List<ProcessorInfo> processors = new ArrayList<>();
-        processors.add(new ProcessorInfo(Config.mekanismCrusher, "mekanism", MekanismCrusherProcessor::new));
-        processors.add(new ProcessorInfo(Config.enderioSagMill, "enderio_machines", EnderIOSAGMillProcessor::new));
-        processors.add(new ProcessorInfo(Config.integratedDynamicsSqueezer, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
-        processors.add(new ProcessorInfo(Config.actuallyAdditionsCrusher, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
-        processors.add(new ProcessorInfo(Config.modernIndustrializationMacerator, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
+        PROCESSORS.sort(Comparator.comparing(p -> p.priority.get()));
 
-        processors.add(new ProcessorInfo(Config.mekanismSawMill, "mekanism", MekanismSawmillProcessor::new));
-        processors.add(new ProcessorInfo(Config.modernIndustrializationCuttingMachine, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
-        processors.add(new ProcessorInfo(Config.farmersDelightCuttingBoard, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
-        processors.removeIf(p -> p.priority == -1);
-        processors.sort(Comparator.comparing(ProcessorInfo::priority));
-
-        for (var processor : processors.reversed()) {
-            if (mods.isLoaded(processor.modid)) {
+        for (var processor : PROCESSORS.reversed()) {
+            if (processor.priority.get() != -1 && mods.isLoaded(processor.modid)) {
                 var p = processor.constructor.apply(recipeManager);
                 ArsUnification.LOGGER.info("Running processor {}", p.getClass().getName());
                 p.processRecipes();
