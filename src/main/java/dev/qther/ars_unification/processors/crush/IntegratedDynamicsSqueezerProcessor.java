@@ -51,6 +51,6 @@ public class IntegratedDynamicsSqueezerProcessor extends Processor<CraftingInput
             wrapper = wrapper.withItems(output.getIngredientFirst(), output.getChance());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

@@ -36,6 +36,6 @@ public class ActuallyAdditionsCrusherProcessor extends Processor<RecipeInput, Cr
                 .withItems(recipe.getOutputOne(), recipe.getFirstChance())
                 .withItems(recipe.getOutputTwo(), recipe.getSecondChance());
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

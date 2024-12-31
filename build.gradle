@@ -57,6 +57,24 @@ repositories {
         name = "shedaniel"
         url = "https://maven.shedaniel.me"
     }
+    maven {
+        name = "klikli"
+        url = "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        content {
+            includeGroup "com.klikli_dev"
+        }
+    }
+    maven {
+        name = "SBL Maven"
+        url "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+        content {
+            includeGroup "net.tslat.smartbrainlib"
+        }
+    }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
     exclusiveContent {
         forRepository {
             maven {
@@ -166,6 +184,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     implementation "com.hollingsworth.ars_nouveau:ars_nouveau-${project.minecraft_version}:${project.ars_version}"
 
+
     implementation "alexthw.not_enough_glyphs:not_enough_glyphs1.21.0:${project.neg_version}"
 
     compileOnly "mezz.jei:jei-${project.minecraft_version}-neoforge-api:${project.jei_version}"
@@ -179,9 +198,12 @@ dependencies {
 
     implementation "org.cyclops.integrateddynamics:integrateddynamics-${project.minecraft_version}-neoforge:${project.integrateddynamics_version}:deobf"
 
-    implementation "mekanism:Mekanism:${minecraft_version}-${project.mekanism_version}"
+    implementation "mekanism:Mekanism:${project.minecraft_version}-${project.mekanism_version}"
 
     implementation "aztech:Modern-Industrialization:${project.modern_industrialization_version}"
+
+    implementation "com.klikli_dev:occultism-${project.minecraft_version}-neoforge:${project.occultism_version}"
+    implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.smartbrainlib_version}"
 
     implementation "curse.maven:farmers-delight-398521:5962800"
 }

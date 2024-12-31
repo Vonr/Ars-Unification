@@ -50,6 +50,6 @@ public class MekanismSawmillProcessor extends Processor<SingleRecipeInput, Sawmi
             wrapper = wrapper.withItems(output.copy(), (float) recipe.getSecondaryChance());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

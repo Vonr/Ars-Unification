@@ -55,32 +55,31 @@ public class ArsUnification {
     }
 
     private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
-    private static boolean conditionalProcessorsRegistered = false;
-
-    static {
-        // Crush
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_CRUSHER, "mekanism", MekanismCrusherProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ENDERIO_SAG_MILL, "enderio_machines", EnderIOSAGMillProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.INTEGRATEDDYNAMICS_SQUEEZER, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ACTUALLYADDITIONS_CRUSHER, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
-
-        // Cut
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_SAWMILL, "immersiveengineering", ImmersiveEngineeringSawmillProcessor::new));
-
-        // Press
-    }
+    private static boolean processorsRegistered = false;
 
     public static void processRecipes(RecipeManager recipeManager) {
         var mods = ModList.get();
 
-        if (!conditionalProcessorsRegistered) {
-            conditionalProcessorsRegistered = true;
+        if (!processorsRegistered) {
+            processorsRegistered = true;
+
+            // Crush
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_CRUSHER, "mekanism", MekanismCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ENDERIO_SAG_MILL, "enderio_machines", EnderIOSAGMillProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.INTEGRATEDDYNAMICS_SQUEEZER, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ACTUALLYADDITIONS_CRUSHER, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.OCCULTISM_CRUSHER, "occultism", OccultismCrusherProcessor::new));
+
+            // Cut
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_SAWMILL, "immersiveengineering", ImmersiveEngineeringSawmillProcessor::new));
+
             if (mods.isLoaded("not_enough_glyphs")) {
+                // Press
                 PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_COMPRESSOR, "modern_industrialization", ModernIndustrializationCompressorProcessor::new));
             }
         }

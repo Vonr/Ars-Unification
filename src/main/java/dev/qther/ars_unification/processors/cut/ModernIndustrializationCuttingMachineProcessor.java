@@ -30,6 +30,6 @@ public class ModernIndustrializationCuttingMachineProcessor extends MIProcessor 
             wrapper = wrapper.withItems(output.getStack(), output.probability());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

@@ -21,10 +21,11 @@ required for the mod to function as it will reduce functionally duplicated recip
 Supported mods:
 - [Actually Additions](https://modrinth.com/mod/actually-additions) (Crusher)
 - [Ender IO](https://modrinth.com/mod/enderio) (SAG Mill)
+- [Farmer's Delight](https://modrinth.com/mod/farmers-delight) (Cutting Board)
 - [Immersive Engineering](https://modrinth.com/mod/immersiveengineering) (Crusher, Sawmill)
 - [Integrated Dynamics](https://modrinth.com/mod/integrated-dynamics) (Squeezer/Mechanical Squeezer)
 - [Mekanism](https://modrinth.com/mod/mekanism) (Crusher, Sawmill)
 - [Modern Industrialization](https://modrinth.com/mod/modern-industrialization) (Macerator, Cutting Machine, Compressor)
-- [Farmer's Delight](https://modrinth.com/mod/farmers-delight) (Cutting Board)
+- [Occultism](https://modrinth.com/mod/occultism) (Crusher Spirits)
 
 Logo modified from Ars Nouveau's Crush Glyph texture, which can be found [here](https://github.com/baileyholl/Ars-Nouveau/blob/main/src/main/resources/assets/ars_nouveau/textures/item/crush.png).

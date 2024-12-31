@@ -46,6 +46,6 @@ public class MekanismCrusherProcessor extends Processor<SingleRecipeInput, ItemS
             wrapper = wrapper.withItems(output.copy());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

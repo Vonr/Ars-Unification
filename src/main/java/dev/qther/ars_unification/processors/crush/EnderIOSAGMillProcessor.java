@@ -35,6 +35,6 @@ public class EnderIOSAGMillProcessor extends Processor<SagMillingRecipe.Input, S
             wrapper = wrapper.withItems(output.getItemStack(), output.chance());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

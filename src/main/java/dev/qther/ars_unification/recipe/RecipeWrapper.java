@@ -4,16 +4,14 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class RecipeWrapper<R extends Recipe<?>, O> {
     public ResourceLocation path;
@@ -35,6 +33,10 @@ public abstract class RecipeWrapper<R extends Recipe<?>, O> {
     public abstract RecipeWrapper<R, O> withItems(ItemStack output);
 
     public abstract R asRecipe();
+
+    public RecipeHolder<R> asHolder() {
+        return new RecipeHolder<>(this.path, this.asRecipe());
+    }
 
     public static class Crush extends RecipeWrapper<CrushRecipe, CrushRecipe.CrushOutput> {
         public Crush(ResourceLocation location, Ingredient ingredient){

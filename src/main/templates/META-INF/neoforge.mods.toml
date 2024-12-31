@@ -10,7 +10,7 @@ displayName = "${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL = "https://github.com/Vonr/Ars-Unification" #optional
 logoFile="ars_unification.png"
-credits="Authors of Ars Nouveau, Ars Omega, Not Enough Glyphs, Actually Additions, Ender IO, Farmer's Delight, Immersive Engineering, Integrated Dynamics, Mekanism, and Modern Industrialization"
+credits="Authors of Ars Nouveau, Ars Omega, Not Enough Glyphs, Actually Additions, Ender IO, Farmer's Delight, Immersive Engineering, Integrated Dynamics, Mekanism, Modern Industrialization, and Occultism"
 authors = "${mod_authors}"
 
 description = '''${mod_description}'''
@@ -120,6 +120,17 @@ side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     modrinth = "modern-industrialization"
     curseforge = "modern-industrialization"
+
+
+[[dependencies."${mod_id}"]]
+modId="occultism"
+type="optional"
+versionRange="[1.171.0,)"
+ordering="AFTER"
+side="BOTH"
+    [dependencies."${mod_id}".mc-publish]
+    modrinth = "occultism"
+    curseforge = "occultism"
 
 
 [[dependencies."${mod_id}"]]

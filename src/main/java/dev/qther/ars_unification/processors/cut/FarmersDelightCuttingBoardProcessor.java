@@ -41,6 +41,6 @@ public class FarmersDelightCuttingBoardProcessor extends Processor<CuttingBoardR
             wrapper = wrapper.withItems(output);
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

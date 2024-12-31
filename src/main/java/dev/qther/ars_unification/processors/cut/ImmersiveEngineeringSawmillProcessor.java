@@ -43,6 +43,6 @@ public class ImmersiveEngineeringSawmillProcessor extends Processor<RecipeInput,
             wrapper = wrapper.withItems(output.copy());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }

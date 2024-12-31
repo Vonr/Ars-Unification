@@ -39,6 +39,6 @@ public class ImmersiveEngineeringCrusherProcessor extends Processor<RecipeInput,
             wrapper = wrapper.withItems(output.stack().get(), output.chance());
         }
 
-        return new RecipeHolder<>(wrapper.path, wrapper.asRecipe());
+        return wrapper.asHolder();
     }
 }
