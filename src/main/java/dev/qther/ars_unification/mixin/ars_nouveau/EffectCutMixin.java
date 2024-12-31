@@ -72,7 +72,7 @@ public class EffectCutMixin extends AbstractEffectMixin {
         CutRecipe lastHit = null; // Cache this for AOE hits
         int itemsCut = 0;
         for (ItemEntity IE : itemEntities) {
-            if (itemsCut > maxItemCut) {
+            if (itemsCut >= maxItemCut) {
                 break;
             }
 
@@ -84,9 +84,11 @@ public class EffectCutMixin extends AbstractEffectMixin {
                 lastHit = holder == null ? null : holder.value();
             }
 
-            if (lastHit == null) continue;
+            if (lastHit == null) {
+                continue;
+            }
 
-            while (!stack.isEmpty() && itemsCut <= maxItemCut) {
+            while (!stack.isEmpty() && itemsCut < maxItemCut) {
                 List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
                 stack.shrink(1);
                 itemsCut++;
