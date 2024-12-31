@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.processors.crush.*;
 import dev.qther.ars_unification.processors.cut.FarmersDelightCuttingBoardProcessor;
+import dev.qther.ars_unification.processors.cut.ImmersiveEngineeringSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.MekanismSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.ModernIndustrializationCuttingMachineProcessor;
 import dev.qther.ars_unification.processors.press.ModernIndustrializationCompressorProcessor;
@@ -63,11 +64,15 @@ public class ArsUnification {
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.INTEGRATEDDYNAMICS_SQUEEZER, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ACTUALLYADDITIONS_CRUSHER, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
 
         // Cut
-        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAW_MILL, "mekanism", MekanismSawmillProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
+        PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_SAWMILL, "immersiveengineering", ImmersiveEngineeringSawmillProcessor::new));
+
+        // Press
     }
 
     public static void processRecipes(RecipeManager recipeManager) {

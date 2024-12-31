@@ -10,7 +10,7 @@ displayName = "${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL = "https://github.com/Vonr/Ars-Unification" #optional
 logoFile="ars_unification.png"
-credits="Authors of Ars Nouveau, Ars Omega, Not Enough Glyphs, Actually Additions, Ender IO, Farmer's Delight, Integrated Dynamics, Mekanism, and Modern Industrialization"
+credits="Authors of Ars Nouveau, Ars Omega, Not Enough Glyphs, Actually Additions, Ender IO, Farmer's Delight, Immersive Engineering, Integrated Dynamics, Mekanism, and Modern Industrialization"
 authors = "${mod_authors}"
 
 description = '''${mod_description}'''
@@ -76,6 +76,17 @@ side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     modrinth = "enderio"
     curseforge = "ender-io"
+
+
+[[dependencies."${mod_id}"]]
+modId="immersiveengineering"
+type="optional"
+versionRange="[12.0.0,)"
+ordering="AFTER"
+side="BOTH"
+    [dependencies."${mod_id}".mc-publish]
+    modrinth = "immersiveengineering"
+    curseforge = "immersive-engineering"
 
 
 [[dependencies."${mod_id}"]]

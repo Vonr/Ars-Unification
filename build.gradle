@@ -175,6 +175,8 @@ dependencies {
 
     implementation "com.enderio:enderio-machines:${project.enderio_version}"
 
+    implementation "blusunrize.immersiveengineering:ImmersiveEngineering:${project.minecraft_version}-${project.immersive_engineering_version}"
+
     implementation "org.cyclops.integrateddynamics:integrateddynamics-${project.minecraft_version}-neoforge:${project.integrateddynamics_version}:deobf"
 
     implementation "mekanism:Mekanism:${minecraft_version}-${project.mekanism_version}"
