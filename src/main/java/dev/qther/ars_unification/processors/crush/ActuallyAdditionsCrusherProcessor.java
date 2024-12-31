@@ -4,7 +4,7 @@ import de.ellpeck.actuallyadditions.mod.crafting.ActuallyRecipes;
 import de.ellpeck.actuallyadditions.mod.crafting.CrushingRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -32,7 +32,7 @@ public class ActuallyAdditionsCrusherProcessor extends Processor<RecipeInput, Cr
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends CrushingRecipe> recipeHolder, Ingredient ingredient) {
         var recipe = recipeHolder.value();
-        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient)
+        var wrapper = new RecipeWrapper.Crush(recipeHolder.id(), ingredient)
                 .withItems(recipe.getOutputOne(), recipe.getFirstChance())
                 .withItems(recipe.getOutputTwo(), recipe.getSecondChance());
 

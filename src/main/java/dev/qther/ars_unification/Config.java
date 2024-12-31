@@ -17,7 +17,7 @@ public class Config {
     public static final Config CONFIG;
     public static final ModConfigSpec SPEC;
 
-    public static Matcher exceptions;
+    public Matcher exceptions;
     
     public ModConfigSpec.ConfigValue<List<? extends String>> EXCEPTIONS;
     
@@ -31,6 +31,8 @@ public class Config {
     public ModConfigSpec.IntValue MEKANISM_SAW_MILL;
     public ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_CUTTING_MACHINE;
     public ModConfigSpec.IntValue FARMERS_DELIGHT_CUTTING_BOARD;
+
+    public ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_COMPRESSOR;
 
     private Config(ModConfigSpec.Builder builder) {
          EXCEPTIONS = builder.comment("List of Regular Expressions to deny recipe unification of").defineListAllowEmpty("exceptions", List.of(), Config::validateRegex);
@@ -47,6 +49,9 @@ public class Config {
          MEKANISM_SAW_MILL = builder.comment("Priority of Mekanism's Sawmill recipes, -1 to disable").defineInRange("mekanism.sawmill", 100, -1, 2147483647);
          MODERN_INDUSTRIALIZATION_CUTTING_MACHINE = builder.comment("Priority of Modern Industrialization's Cutting Machine recipes, -1 to disable").defineInRange("modern_industrialization.cutting_machine", -1, -1, 2147483647);
          FARMERS_DELIGHT_CUTTING_BOARD = builder.comment("Priority of Farmer's Delight's Cutting Board recipes, -1 to disable").defineInRange("farmersdelight.cutting_board", 60, -1, 2147483647);
+
+        builder = builder.pop().push("press");
+        MODERN_INDUSTRIALIZATION_COMPRESSOR = builder.comment("Priority of Modern Industrialization's Compressor recipes, -1 to disable").defineInRange("modern_industrialization.cutting_machine", -1, 100, 2147483647);
     }
 
     private static boolean validateRegex(final Object obj) {
@@ -79,14 +84,14 @@ public class Config {
         var pattern = patternBuilder.toString();
         ArsUnification.LOGGER.info("Trying to compile deny list pattern {}", patternBuilder);
         try {
-            exceptions = Pattern.compile(pattern.length() <= 2 ? "" : pattern, Pattern.CASE_INSENSITIVE).matcher("");
+            CONFIG.exceptions = Pattern.compile(pattern.length() <= 2 ? "" : pattern, Pattern.CASE_INSENSITIVE).matcher("");
         } catch (Exception e) {
             ArsUnification.LOGGER.error("Could not compile deny list pattern", e);
         }
     }
 
     public static boolean isExcluded(ResourceLocation id) {
-        return exceptions.reset(id.toString()).matches();
+        return CONFIG.exceptions.reset(id.toString()).matches();
     }
 
     static {

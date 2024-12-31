@@ -4,7 +4,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -30,7 +30,7 @@ public class EnderIOSAGMillProcessor extends Processor<SagMillingRecipe.Input, S
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends SagMillingRecipe> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Crush(recipeHolder.id(), ingredient);
         for (var output : recipeHolder.value().outputs()) {
             wrapper = wrapper.withItems(output.getItemStack(), output.chance());
         }

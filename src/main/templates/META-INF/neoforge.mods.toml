@@ -10,7 +10,7 @@ displayName = "${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL = "https://github.com/Vonr/Ars-Unification" #optional
 logoFile="ars_unification.png"
-credits="Authors of Ars Nouveau, Actually Additions, Ender IO, Farmer's Delight, Integrated Dynamics, Mekanism, and Modern Industrialization"
+credits="Authors of Ars Nouveau, Ars Omega, Not Enough Glyphs, Actually Additions, Ender IO, Farmer's Delight, Integrated Dynamics, Mekanism, and Modern Industrialization"
 authors = "${mod_authors}"
 
 description = '''${mod_description}'''
@@ -43,6 +43,17 @@ side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     modrinth = "ars-nouveau"
     curseforge = "ars-nouveau"
+
+
+[[dependencies."${mod_id}"]]
+modId="not_enough_glyphs"
+type="optional"
+versionRange="[4.0.0,)"
+ordering="AFTER"
+side="BOTH"
+    [dependencies."${mod_id}".mc-publish]
+    # modrinth = "not-enough-glyphs"
+    curseforge = "not-enough-glyphs"
 
 
 [[dependencies."${mod_id}"]]

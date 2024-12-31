@@ -6,6 +6,7 @@ import dev.qther.ars_unification.processors.crush.*;
 import dev.qther.ars_unification.processors.cut.FarmersDelightCuttingBoardProcessor;
 import dev.qther.ars_unification.processors.cut.MekanismSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.ModernIndustrializationCuttingMachineProcessor;
+import dev.qther.ars_unification.processors.press.ModernIndustrializationCompressorProcessor;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.resources.ResourceLocation;
@@ -47,10 +48,14 @@ public class ArsUnification {
     public void onDatapackSync(OnDatapackSyncEvent event) {
         processRecipes(event.getPlayerList().getServer().getRecipeManager());
     }
-    
-    record ProcessorInfo(ModConfigSpec.IntValue priority, String modid, Function<RecipeManager, Processor> constructor) {}
+
+    record ProcessorInfo(ModConfigSpec.IntValue priority, String modid,
+                         Function<RecipeManager, Processor> constructor) {
+    }
 
     private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
+    private static boolean conditionalProcessorsRegistered = false;
+
     static {
         // Crush
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_CRUSHER, "mekanism", MekanismCrusherProcessor::new));
@@ -65,9 +70,16 @@ public class ArsUnification {
         PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
     }
 
-
     public static void processRecipes(RecipeManager recipeManager) {
         var mods = ModList.get();
+
+        if (!conditionalProcessorsRegistered) {
+            conditionalProcessorsRegistered = true;
+            if (mods.isLoaded("not_enough_glyphs")) {
+                PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_COMPRESSOR, "modern_industrialization", ModernIndustrializationCompressorProcessor::new));
+            }
+        }
+
         PROCESSORS.sort(Comparator.comparing(p -> p.priority.get()));
 
         for (var processor : PROCESSORS.reversed()) {
@@ -98,6 +110,19 @@ public class ArsUnification {
 
     public static Set<Item> cutRecipesIngredientSet(RecipeManager recipeManager) {
         var recipes = recipeManager.getAllRecipesFor(AURecipeRegistry.CUT_TYPE.get());
+
+        Set<Item> set = new ObjectOpenHashSet<>(recipes.size());
+        for (var recipe : recipes) {
+            for (var stack : recipe.value().input().getItems()) {
+                set.add(stack.getItem());
+            }
+        }
+
+        return set;
+    }
+
+    public static Set<Item> pressRecipesIngredientSet(RecipeManager recipeManager) {
+        var recipes = recipeManager.getAllRecipesFor(AURecipeRegistry.PRESS_TYPE.get());
 
         Set<Item> set = new ObjectOpenHashSet<>(recipes.size());
         for (var recipe : recipes) {

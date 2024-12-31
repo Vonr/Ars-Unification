@@ -2,7 +2,7 @@ package dev.qther.ars_unification.processors.cut;
 
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -36,7 +36,7 @@ public class FarmersDelightCuttingBoardProcessor extends Processor<CuttingBoardR
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends CuttingBoardRecipe> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrappers.Cut(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Cut(recipeHolder.id(), ingredient);
         for (var output : recipeHolder.value().getResults()) {
             wrapper = wrapper.withItems(output);
         }

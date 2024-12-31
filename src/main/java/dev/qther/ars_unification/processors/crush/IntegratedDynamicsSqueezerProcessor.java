@@ -3,7 +3,7 @@ package dev.qther.ars_unification.processors.crush;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,7 +46,7 @@ public class IntegratedDynamicsSqueezerProcessor extends Processor<CraftingInput
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends RecipeSqueezer> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Crush(recipeHolder.id(), ingredient);
         for (var output : recipeHolder.value().getOutputItems()) {
             wrapper = wrapper.withItems(output.getIngredientFirst(), output.getChance());
         }

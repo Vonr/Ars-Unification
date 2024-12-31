@@ -2,7 +2,7 @@ package dev.qther.ars_unification.processors.crush;
 
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.api.recipes.MekanismRecipeTypes;
 import net.minecraft.world.item.Item;
@@ -41,7 +41,7 @@ public class MekanismCrusherProcessor extends Processor<SingleRecipeInput, ItemS
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends ItemStackToItemStackRecipe> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrappers.Crush(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Crush(recipeHolder.id(), ingredient);
         for (var output : recipeHolder.value().getOutputDefinition()) {
             wrapper = wrapper.withItems(output.copy());
         }

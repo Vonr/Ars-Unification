@@ -1,4 +1,4 @@
-package dev.qther.ars_unification.processors.cut;
+package dev.qther.ars_unification.processors.press;
 
 import aztech.modern_industrialization.machines.init.MIMachineRecipeTypes;
 import aztech.modern_industrialization.machines.recipe.MachineRecipe;
@@ -13,19 +13,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class ModernIndustrializationCuttingMachineProcessor extends MIProcessor {
-    public ModernIndustrializationCuttingMachineProcessor(RecipeManager recipeManager) {
-        super(recipeManager, MIMachineRecipeTypes.CUTTING_MACHINE);
+public class ModernIndustrializationCompressorProcessor extends MIProcessor {
+    public ModernIndustrializationCompressorProcessor(RecipeManager recipeManager) {
+        super(recipeManager, MIMachineRecipeTypes.COMPRESSOR);
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.cutRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.pressRecipesIngredientSet(this.recipeManager);
     }
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends MachineRecipe> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrapper.Cut(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Press(recipeHolder.id(), ingredient);
         for (var output : recipeHolder.value().itemOutputs) {
             wrapper = wrapper.withItems(output.getStack(), output.probability());
         }

@@ -2,7 +2,7 @@ package dev.qther.ars_unification.processors.cut;
 
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.recipe.RecipeWrappers;
+import dev.qther.ars_unification.recipe.RecipeWrapper;
 import mekanism.api.recipes.MekanismRecipeTypes;
 import mekanism.api.recipes.SawmillRecipe;
 import net.minecraft.world.item.Item;
@@ -41,7 +41,7 @@ public class MekanismSawmillProcessor extends Processor<SingleRecipeInput, Sawmi
 
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends SawmillRecipe> recipeHolder, Ingredient ingredient) {
-        var wrapper = new RecipeWrappers.Cut(recipeHolder.id(), ingredient);
+        var wrapper = new RecipeWrapper.Cut(recipeHolder.id(), ingredient);
         var recipe = recipeHolder.value();
         for (var output : recipe.getMainOutputDefinition()) {
             wrapper = wrapper.withItems(output.copy());
