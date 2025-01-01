@@ -30,7 +30,7 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
-        for (var holder : recipes) {
+        nextRecipe: for (var holder : recipes) {
             if (Config.isExcluded(holder.id())) {
                 continue;
             }
@@ -51,8 +51,14 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
                 var value = values[0];
 
                 if (value instanceof Ingredient.TagValue tag) {
-                    if (tag.getItems().isEmpty() || tag.getItems().stream().anyMatch(i -> existing.contains(i.getItem()))) {
+                    if (tag.getItems().isEmpty()) {
                         continue;
+                    }
+
+                    for (ItemStack i : tag.getItems()) {
+                        if (existing.contains(i.getItem())) {
+                            continue nextRecipe;
+                        }
                     }
 
                     var toAdd = this.processTag(existing, holder, ingredient);

@@ -19,7 +19,6 @@ import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
@@ -53,11 +52,11 @@ public class JEIArsUnificationPlugin implements IModPlugin {
         List<PressRecipe> pressRecipes = new ArrayList<>();
 
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-        for (var recipe : manager.getRecipes().stream().map(RecipeHolder::value).toList()) {
-            switch (recipe) {
+        for (var recipe : manager.getRecipes()) {
+            switch (recipe.value()) {
                 case CutRecipe cutRecipe -> cutRecipes.add(cutRecipe);
                 case PressRecipe pressRecipe -> pressRecipes.add(pressRecipe);
-                case null, default -> {}
+                default -> {}
             }
         }
         registry.addRecipes(CUT_RECIPE_TYPE, cutRecipes);

@@ -80,7 +80,13 @@ public class EffectCutMixin extends AbstractEffectMixin {
             Item item = stack.getItem();
 
             if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                var holder = recipes.stream().filter(recipe -> recipe.value().matches(item.getDefaultInstance(), world)).findFirst().orElse(null);
+                RecipeHolder<CutRecipe> holder = null;
+                for (var recipe : recipes) {
+                    if (recipe.value().matches(item.getDefaultInstance(), world)) {
+                        holder = recipe;
+                        break;
+                    }
+                }
                 lastHit = holder == null ? null : holder.value();
             }
 
