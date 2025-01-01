@@ -37,7 +37,7 @@ side = "BOTH"
 [[dependencies."${mod_id}"]]
 modId="ars_nouveau"
 type="required"
-versionRange="[5.3.6,)"
+versionRange="${ars_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -48,7 +48,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="not_enough_glyphs"
 type="optional"
-versionRange="[4.0.0,)"
+versionRange="${neg_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -59,7 +59,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="mekanism"
 type="optional"
-versionRange="[10.0.0,)"
+versionRange="${mekanism_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -70,7 +70,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="enderio_machines"
 type="optional"
-versionRange="[7.0.0,)"
+versionRange="${enderio_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -81,7 +81,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="immersiveengineering"
 type="optional"
-versionRange="[12.0.0,)"
+versionRange="${immersive_engineering_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -92,7 +92,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="integrateddynamics"
 type="optional"
-versionRange="[1.0.0,)"
+versionRange="${integrateddynamics_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -103,7 +103,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="actuallyadditions"
 type="optional"
-versionRange="[1.0.0,)"
+versionRange="${actuallyadditions_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -114,7 +114,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="modern_industrialization"
 type="optional"
-versionRange="[2.0.0,)"
+versionRange="${modern_industrialization_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -125,7 +125,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="occultism"
 type="optional"
-versionRange="[1.171.0,)"
+versionRange="${occultism_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
@@ -136,7 +136,7 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="farmersdelight"
 type="optional"
-versionRange="[1.2.4,)"
+versionRange="${farmers_delight_version_range}"
 ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
