@@ -141,4 +141,4 @@ ordering="AFTER"
 side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     modrinth = "farmers-delight"
-    curseforge = "modern-industrialization"
+    curseforge = "farmers-delight"
