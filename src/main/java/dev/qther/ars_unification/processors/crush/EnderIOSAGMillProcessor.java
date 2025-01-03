@@ -1,7 +1,7 @@
 package dev.qther.ars_unification.processors.crush;
 
+import com.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.recipe.SagMillingRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
