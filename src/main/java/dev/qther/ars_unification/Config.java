@@ -78,6 +78,10 @@ public class Config {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        if (event instanceof ModConfigEvent.Unloading) {
+            return;
+        }
+        
         var patternBuilder = new StringBuilder("(");
         for (var subpattern : CONFIG.EXCEPTIONS.get()) {
             if (patternBuilder.length() > 1) {
