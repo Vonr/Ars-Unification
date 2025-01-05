@@ -84,6 +84,10 @@ public class ArsUnification {
             }
         }
 
+        if (!Config.SPEC.isLoaded()) {
+            return;
+        }
+
         PROCESSORS.sort(Comparator.comparing(p -> p.priority.get()));
 
         for (var processor : PROCESSORS.reversed()) {
