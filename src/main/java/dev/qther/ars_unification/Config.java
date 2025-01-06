@@ -48,7 +48,7 @@ public class Config {
         INTEGRATEDDYNAMICS_USE_MECHANICAL = builder.comment("Use the Mechanical Squeezer's recipes instead").define("integrateddynamics.squeezer.mechanical", true);
         ACTUALLYADDITIONS_CRUSHER = builder.comment("Priority of Actually Additions's Crusher recipes, -1 to disable").defineInRange("actuallyadditions.crusher.priority", 80, -1, Integer.MAX_VALUE);
         MODERN_INDUSTRIALIZATION_MACERATOR = builder.comment("Priority of Modern Industrialization's Macerator recipes, -1 to disable").defineInRange("modern_industrialization.macerator.priority", 90, -1, Integer.MAX_VALUE);
-        IMMERSIVE_ENGINEERING_CRUSHER = builder.comment("Priority of Immersive Engineering's Crusher recipes, -1 to disable").defineInRange("immersiveengineering.sawmill.priority", 85, -1, Integer.MAX_VALUE);
+        IMMERSIVE_ENGINEERING_CRUSHER = builder.comment("Priority of Immersive Engineering's Crusher recipes, -1 to disable").defineInRange("immersiveengineering.crusher.priority", 85, -1, Integer.MAX_VALUE);
         OCCULTISM_CRUSHER = builder.comment("Priority of Occultism's Crusher recipes, -1 to disable").defineInRange("occultism.crusher.priority", 115, -1, Integer.MAX_VALUE);
         OCCULTISM_CRUSHER_TIER = builder.comment("Tier to use for Occultism's Crusher").defineInRange("occultism.crusher.tier", 1, 1, 4);
 
