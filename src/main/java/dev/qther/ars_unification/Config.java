@@ -53,7 +53,7 @@ public class Config {
         OCCULTISM_CRUSHER_TIER = builder.comment("Tier to use for Occultism's Crusher").defineInRange("occultism.crusher.tier", 1, 1, 4);
 
         builder = builder.pop().push("cut");
-        MEKANISM_SAWMILL = builder.comment("Priority of Mekanism's Sawmill recipes, -1 to disable").defineInRange("mekanism.sawmill", 100, -1, Integer.MAX_VALUE);
+        MEKANISM_SAWMILL = builder.comment("Priority of Mekanism's Sawmill recipes, -1 to disable").defineInRange("mekanism.sawmill.priority", 100, -1, Integer.MAX_VALUE);
         MODERN_INDUSTRIALIZATION_CUTTING_MACHINE = builder.comment("Priority of Modern Industrialization's Cutting Machine recipes, -1 to disable").defineInRange("modern_industrialization.cutting_machine.priority", -1, -1, Integer.MAX_VALUE);
         FARMERS_DELIGHT_CUTTING_BOARD = builder.comment("Priority of Farmer's Delight's Cutting Board recipes, -1 to disable").defineInRange("farmersdelight.cutting_board.priority", 60, -1, Integer.MAX_VALUE);
         IMMERSIVE_ENGINEERING_SAWMILL = builder.comment("Priority of Immersive Engineering's Sawmill recipes, -1 to disable").defineInRange("immersiveengineering.sawmill.priority", 80, -1, Integer.MAX_VALUE);
