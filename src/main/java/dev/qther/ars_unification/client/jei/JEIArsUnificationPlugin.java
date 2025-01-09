@@ -1,6 +1,6 @@
 package dev.qther.ars_unification.client.jei;
 
-import alexthw.not_enough_glyphs.common.glyphs.EffectFlatten;
+import alexthw.not_enough_glyphs.common.glyphs.effects.EffectFlatten;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.jei.CraftingTerminalTransferHandler;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCut;

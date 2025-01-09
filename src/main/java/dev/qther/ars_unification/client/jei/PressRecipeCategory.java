@@ -1,6 +1,6 @@
 package dev.qther.ars_unification.client.jei;
 
-import alexthw.not_enough_glyphs.common.glyphs.EffectFlatten;
+import alexthw.not_enough_glyphs.common.glyphs.effects.EffectFlatten;
 import dev.qther.ars_unification.recipe.PressRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

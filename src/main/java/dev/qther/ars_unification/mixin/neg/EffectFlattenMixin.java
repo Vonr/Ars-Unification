@@ -1,6 +1,6 @@
 package dev.qther.ars_unification.mixin.neg;
 
-import alexthw.not_enough_glyphs.common.glyphs.EffectFlatten;
+import alexthw.not_enough_glyphs.common.glyphs.effects.EffectFlatten;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.qther.ars_unification.mixin.ars_nouveau.AbstractEffectMixin;
-import dev.qther.ars_unification.recipe.CutRecipe;
 import dev.qther.ars_unification.recipe.PressRecipe;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
 import net.minecraft.core.BlockPos;
