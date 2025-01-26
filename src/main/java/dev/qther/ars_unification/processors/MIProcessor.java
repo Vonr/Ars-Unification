@@ -8,6 +8,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> {
     public MIProcessor(RecipeManager recipeManager, RecipeType<MachineRecipe> type) {
         super(recipeManager, type);
@@ -20,7 +22,7 @@ public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> 
         }
 
         for (var fluidIn : recipe.fluidInputs) {
-            if (!fluidIn.fluid().isSame(MIFluids.LUBRICANT.asFluid())) {
+            if (!Arrays.stream(fluidIn.fluid().getStacks()).allMatch(f -> f.is(MIFluids.LUBRICANT.asFluid()))) {
                 return null;
             }
         }

@@ -202,9 +202,9 @@ dependencies {
     implementation "aztech:Modern-Industrialization:${project.modern_industrialization_version}"
 
     implementation "com.klikli_dev:occultism-${project.minecraft_version}-neoforge:${project.occultism_version}"
-    implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.smartbrainlib_version}"
+    compileOnly "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.smartbrainlib_version}"
 
-    implementation "curse.maven:farmers-delight-398521:5962800"
+    implementation "curse.maven:farmers-delight-398521:${project.farmers_delight_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
