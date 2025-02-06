@@ -7,6 +7,7 @@ import dev.qther.ars_unification.processors.cut.FarmersDelightCuttingBoardProces
 import dev.qther.ars_unification.processors.cut.ImmersiveEngineeringSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.MekanismSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.ModernIndustrializationCuttingMachineProcessor;
+import dev.qther.ars_unification.processors.press.AE2CircuitPrintingProcesser;
 import dev.qther.ars_unification.processors.press.ModernIndustrializationCompressorProcessor;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -71,7 +72,7 @@ public class ArsUnification {
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.OCCULTISM_CRUSHER, "occultism", OccultismCrusherProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.AE2_INSCRIBER, "ae2", AE2InscriberProcesser::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.CRUSH_AE2_INSCRIBER, "ae2", AE2InscriberProcesser::new));
 
             // Cut
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));
@@ -82,6 +83,7 @@ public class ArsUnification {
             if (mods.isLoaded("not_enough_glyphs")) {
                 // Press
                 PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_COMPRESSOR, "modern_industrialization", ModernIndustrializationCompressorProcessor::new));
+                PROCESSORS.add(new ProcessorInfo(Config.CONFIG.PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING, "ae2", AE2CircuitPrintingProcesser::new));
             }
         }
 

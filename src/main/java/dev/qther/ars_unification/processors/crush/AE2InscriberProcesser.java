@@ -26,17 +26,11 @@ public class AE2InscriberProcesser extends Processor<RecipeInput, InscriberRecip
 
     @Override
     public @Nullable Ingredient getIngredient(InscriberRecipe recipe) {
-        Ingredient ingredient = Ingredient.EMPTY;
-        for (var ing : recipe.getIngredients()) {
-            if (ing != null && !ing.isEmpty()) {
-                if (!ingredient.isEmpty()) {
-                    return null;
-                }
-
-                ingredient = ing;
-            }
+        if (!recipe.getTopOptional().isEmpty() || !recipe.getBottomOptional().isEmpty()) {
+            return null;
         }
 
+        Ingredient ingredient = recipe.getMiddleInput();
         if (ingredient.isEmpty()) {
             return null;
         }

@@ -30,7 +30,7 @@ public class Config {
     public ModConfigSpec.IntValue IMMERSIVE_ENGINEERING_CRUSHER;
     public ModConfigSpec.IntValue OCCULTISM_CRUSHER;
     public ModConfigSpec.IntValue OCCULTISM_CRUSHER_TIER;
-    public ModConfigSpec.IntValue AE2_INSCRIBER;
+    public ModConfigSpec.IntValue CRUSH_AE2_INSCRIBER;
 
     public ModConfigSpec.IntValue MEKANISM_SAWMILL;
     public ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_CUTTING_MACHINE;
@@ -38,9 +38,11 @@ public class Config {
     public ModConfigSpec.IntValue IMMERSIVE_ENGINEERING_SAWMILL;
 
     public ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_COMPRESSOR;
+    public ModConfigSpec.IntValue PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING;
+    public ModConfigSpec.ConfigValue<List<? extends String>> PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING_PRESSES;
 
     private Config(ModConfigSpec.Builder builder) {
-        EXCEPTIONS = builder.comment("List of Regular Expressions to deny recipe unification of").defineListAllowEmpty("exceptions", List.of(), Config::validateRegex);
+        EXCEPTIONS = builder.comment("List of Regular Expressions to deny recipe unification of").defineListAllowEmpty("exceptions", List.of(), () -> "", Config::validateRegex);
 
         builder = builder.push("crush");
         MEKANISM_CRUSHER = builder.comment("Priority of Mekanism's Crusher recipes, -1 to disable").defineInRange("mekanism.crusher.priority", 100, -1, Integer.MAX_VALUE);
@@ -52,7 +54,7 @@ public class Config {
         IMMERSIVE_ENGINEERING_CRUSHER = builder.comment("Priority of Immersive Engineering's Crusher recipes, -1 to disable").defineInRange("immersiveengineering.crusher.priority", 85, -1, Integer.MAX_VALUE);
         OCCULTISM_CRUSHER = builder.comment("Priority of Occultism's Crusher recipes, -1 to disable").defineInRange("occultism.crusher.priority", 115, -1, Integer.MAX_VALUE);
         OCCULTISM_CRUSHER_TIER = builder.comment("Tier to use for Occultism's Crusher").defineInRange("occultism.crusher.tier", 1, 1, 4);
-        AE2_INSCRIBER = builder.comment("Priority of AE2's Inscriber recipes, -1 to disable").defineInRange("ae2.inscriber.priority", 20, -1, Integer.MAX_VALUE);
+        CRUSH_AE2_INSCRIBER = builder.comment("Priority of AE2's Inscriber recipes, -1 to disable").defineInRange("ae2.inscriber.priority", 20, -1, Integer.MAX_VALUE);
 
         builder = builder.pop().push("cut");
         MEKANISM_SAWMILL = builder.comment("Priority of Mekanism's Sawmill recipes, -1 to disable").defineInRange("mekanism.sawmill.priority", 100, -1, Integer.MAX_VALUE);
@@ -62,6 +64,8 @@ public class Config {
 
         builder = builder.pop().push("press");
         MODERN_INDUSTRIALIZATION_COMPRESSOR = builder.comment("Priority of Modern Industrialization's Compressor recipes, -1 to disable").defineInRange("modern_industrialization.compressor.priority", -1, 100, Integer.MAX_VALUE);
+        PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING = builder.comment("Priority of AE2's Inscriber circuit printing recipes, -1 to disable").defineInRange("ae2.inscriber.circuit_printing.priority", 200, -1, Integer.MAX_VALUE);
+        PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING_PRESSES = builder.comment("List of allowed press item IDs").defineListAllowEmpty("ae2.inscriber.circuit_printing.presses", List.of("ae2:calculation_processor_press", "ae2:engineering_processor_press", "ae2:logic_processor_press", "ae2:silicon_press", "megacells:accumulation_processor_press", "extendedae:concurrent_processor_press", "advanced_ae:quantum_processor_press", "appflux:energy_processor_press"), () -> "", (l) -> true);
     }
 
     private static boolean validateRegex(final Object obj) {
