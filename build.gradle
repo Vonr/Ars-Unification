@@ -191,6 +191,9 @@ dependencies {
 
     implementation "de.ellpeck:actuallyadditions:${project.actuallyadditions_version}+mc${project.minecraft_version}"
 
+    implementation "org.appliedenergistics:appliedenergistics2:${project.ae2_version}"
+    compileOnly "org.appliedenergistics:appliedenergistics2:${project.ae2_version}:api"
+
     implementation "com.enderio:enderio-machines:${project.enderio_version}"
 
     implementation "blusunrize.immersiveengineering:ImmersiveEngineering:${project.minecraft_version}-${project.immersive_engineering_version}"

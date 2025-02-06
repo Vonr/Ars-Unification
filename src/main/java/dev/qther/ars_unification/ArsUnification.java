@@ -71,6 +71,7 @@ public class ArsUnification {
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.OCCULTISM_CRUSHER, "occultism", OccultismCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.AE2_INSCRIBER, "ae2", AE2InscriberProcesser::new));
 
             // Cut
             PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));

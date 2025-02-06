@@ -19,13 +19,14 @@ Usage of [Almost Unified](https://modrinth.com/mod/almost-unified) is highly rec
 required for the mod to function as it will reduce functionally duplicated recipes.
 
 Supported mods:
-- [Actually Additions](https://modrinth.com/mod/actually-additions) (Crusher)
-- [Ender IO](https://modrinth.com/mod/enderio) (SAG Mill)
-- [Farmer's Delight](https://modrinth.com/mod/farmers-delight) (Cutting Board)
-- [Immersive Engineering](https://modrinth.com/mod/immersiveengineering) (Crusher, Sawmill)
-- [Integrated Dynamics](https://modrinth.com/mod/integrated-dynamics) (Squeezer/Mechanical Squeezer)
-- [Mekanism](https://modrinth.com/mod/mekanism) (Crusher, Sawmill)
-- [Modern Industrialization](https://modrinth.com/mod/modern-industrialization) (Macerator, Cutting Machine, Compressor)
-- [Occultism](https://modrinth.com/mod/occultism) (Crusher Spirits)
+- [Actually Additions](https://www.curseforge.com/minecraft/mc-mods/actually-additions) (Crusher)
+- [Applied Energistics 2](https://www.curseforge.com/minecraft/mc-mods/applied-energistics-2) (Inscriber)
+- [Ender IO](https://www.curseforge.com/minecraft/mc-mods/ender-io) (SAG Mill)
+- [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight) (Cutting Board)
+- [Immersive Engineering](https://www.curseforge.com/minecraft/mc-mods/immersive-engineering) (Crusher, Sawmill)
+- [Integrated Dynamics](https://www.curseforge.com/minecraft/mc-mods/integrated-dynamics) (Squeezer/Mechanical Squeezer)
+- [Mekanism](https://www.curseforge.com/minecraft/mc-mods/mekanism) (Crusher, Sawmill)
+- [Modern Industrialization](https://www.curseforge.com/minecraft/mc-mods/modern-industrialization) (Macerator, Cutting Machine, Compressor)
+- [Occultism](https://www.curseforge.com/minecraft/mc-mods/occultism) (Crusher Spirits)
 
 Logo modified from Ars Nouveau's Crush Glyph texture, which can be found [here](https://github.com/baileyholl/Ars-Nouveau/blob/main/src/main/resources/assets/ars_nouveau/textures/item/crush.png).
