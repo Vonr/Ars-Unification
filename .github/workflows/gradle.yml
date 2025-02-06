@@ -36,6 +36,8 @@ jobs:
           distribution: "temurin"
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
       - name: Build with Gradle
         env:
           GITHUB_USER: ${{ github.actor }}
