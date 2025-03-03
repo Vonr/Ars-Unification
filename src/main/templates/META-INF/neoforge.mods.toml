@@ -57,6 +57,29 @@ side="BOTH"
 
 
 [[dependencies."${mod_id}"]]
+modId="jei"
+type="optional"
+versionRange="${jei_version_range}"
+ordering="AFTER"
+side="BOTH"
+[dependencies."${mod_id}".mc-publish]
+    modrinth = "jei"
+    curseforge = "jei"
+
+
+[[dependencies."${mod_id}"]]
+modId="emi"
+type="optional"
+versionRange="${emi_version_range}"
+ordering="AFTER"
+side="BOTH"
+[dependencies."${mod_id}".mc-publish]
+    modrinth = "emi"
+    curseforge = "emi"
+
+
+
+[[dependencies."${mod_id}"]]
 modId="mekanism"
 type="optional"
 versionRange="${mekanism_version_range}"
