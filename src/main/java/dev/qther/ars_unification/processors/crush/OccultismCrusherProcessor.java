@@ -82,8 +82,6 @@ public class OccultismCrusherProcessor extends Processor<TieredSingleRecipeInput
             return null;
         }
 
-        ArsUnification.LOGGER.info("processed {}: {}x {}", recipeHolder.id(), result.getCount(), BuiltInRegistries.ITEM.getKey(result.getItem()));
-
         var outputMultiplier = recipe.getIgnoreCrushingMultiplier() ? 1 : getMultiplier();
         result.setCount((int) (result.getCount() * outputMultiplier));
 
