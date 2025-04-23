@@ -32,7 +32,7 @@ public class PressRecipeCategory implements IRecipeCategory<PressRecipe> {
     @Override
     @NotNull
     public RecipeType<PressRecipe> getRecipeType() {
-        return JEIArsUnificationPlugin.PRESS_RECIPE_TYPE;
+        return JeiArsUnificationPlugin.PRESS_RECIPE_TYPE;
     }
 
     @Override

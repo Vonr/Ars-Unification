@@ -1,6 +1,5 @@
 package dev.qther.ars_unification.client.jei;
 
-import alexthw.not_enough_glyphs.common.glyphs.effects.EffectFlatten;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCut;
 import dev.qther.ars_unification.ArsUnification;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JeiPlugin
-public class JEIArsUnificationPlugin implements IModPlugin {
+public class JeiArsUnificationPlugin implements IModPlugin {
     public static final RecipeType<CutRecipe> CUT_RECIPE_TYPE = RecipeType.create(ArsUnification.MODID, AURecipeRegistry.CUT_RECIPE_ID, CutRecipe.class);
     public static final RecipeType<PressRecipe> PRESS_RECIPE_TYPE = RecipeType.create(ArsUnification.MODID, AURecipeRegistry.PRESS_RECIPE_ID, PressRecipe.class);
 
@@ -67,7 +66,7 @@ public class JEIArsUnificationPlugin implements IModPlugin {
         registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectCut.INSTANCE, AugmentSensitive.INSTANCE), CUT_RECIPE_TYPE);
 
         if (ModList.get().isLoaded("not_enough_glyphs")) {
-            registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectFlatten.INSTANCE, AugmentSensitive.INSTANCE), PRESS_RECIPE_TYPE);
+            JeiNegCompat.registerCategories(registry);
         }
     }
 }

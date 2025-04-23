@@ -32,7 +32,7 @@ public class CutRecipeCategory implements IRecipeCategory<CutRecipe> {
     @Override
     @NotNull
     public RecipeType<CutRecipe> getRecipeType() {
-        return JEIArsUnificationPlugin.CUT_RECIPE_TYPE;
+        return JeiArsUnificationPlugin.CUT_RECIPE_TYPE;
     }
 
     @Override
