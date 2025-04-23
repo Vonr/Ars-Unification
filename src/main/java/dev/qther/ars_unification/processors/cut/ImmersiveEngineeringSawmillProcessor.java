@@ -21,7 +21,7 @@ public class ImmersiveEngineeringSawmillProcessor extends Processor<RecipeInput,
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.pressRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.cutRecipesIngredientSet(this.recipeManager);
     }
 
     @Override
