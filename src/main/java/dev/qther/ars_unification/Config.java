@@ -5,6 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -83,11 +84,11 @@ public class Config {
     }
 
     @SubscribeEvent
-    static void onLoad(final ModConfigEvent event) {
-        if (event instanceof ModConfigEvent.Unloading) {
+    static void onLoad(ModConfigEvent.Loading event) {
+        if (event.getConfig().getSpec() != SPEC) {
             return;
         }
-        
+
         var patternBuilder = new StringBuilder("(");
         for (var subpattern : CONFIG.EXCEPTIONS.get()) {
             if (patternBuilder.length() > 1) {
