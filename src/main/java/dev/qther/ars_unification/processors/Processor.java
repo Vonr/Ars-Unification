@@ -1,11 +1,11 @@
 package dev.qther.ars_unification.processors;
 
+import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
 
         Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
 
-        nextRecipe: for (var holder : recipes) {
+        for (var holder : recipes) {
             if (Config.isExcluded(holder.id())) {
                 continue;
             }
@@ -55,24 +55,29 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
                         continue;
                     }
 
-                    for (ItemStack i : tag.getItems()) {
-                        if (existing.contains(i.getItem())) {
-                            continue nextRecipe;
+                    var flattened = Ingredient.of(tag.getItems().stream().filter(stack -> !stack.isEmpty() && stack.getCount() == 1 && !existing.contains(stack.getItem())));
+                    if (flattened.getItems().length != tag.getItems().size()) {
+                        if (flattened.getItems().length > 0) {
+                            var toAdd = this.makeRecipe(existing, holder, flattened);
+                            if (toAdd != null) {
+                                toReplace.put(toAdd.id(), toAdd);
+                            }
                         }
+                        continue;
                     }
 
-                    var toAdd = this.processTag(existing, holder, ingredient);
+                    var toAdd = this.makeRecipe(existing, holder, ingredient);
                     if (toAdd != null) {
                         toReplace.put(toAdd.id(), toAdd);
                     }
 
                     continue;
                 } else if (value instanceof Ingredient.ItemValue item) {
-                    if (item.item().isEmpty() || existing.contains(item.item().getItem())) {
+                    if (item.item().isEmpty() || item.item().getCount() != 1 || existing.contains(item.item().getItem())) {
                         continue;
                     }
 
-                    var toAdd = this.processItem(existing, holder, ingredient);
+                    var toAdd = this.makeRecipe(existing, holder, ingredient);
                     if (toAdd != null) {
                         toReplace.put(toAdd.id(), toAdd);
                     }
@@ -81,12 +86,9 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
                 }
             }
 
-            for (var stack : ingredient.getItems()) {
-                if (stack.isEmpty() || stack.getCount() != 1 || existing.contains(stack.getItem())) {
-                    continue;
-                }
-
-                var toAdd = this.processStack(existing, holder, stack);
+            Ingredient usable = Ingredient.of(Arrays.stream(ingredient.getItems()).filter(stack -> !stack.isEmpty() && stack.getCount() == 1 && !existing.contains(stack.getItem())));
+            if (usable.getItems().length > 0) {
+                var toAdd = this.makeRecipe(existing, holder, usable);
                 if (toAdd != null) {
                     toReplace.put(toAdd.id(), toAdd);
                 }
@@ -98,23 +100,11 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
 
     public abstract @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient);
 
-    public @Nullable RecipeHolder<?> processStack(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, ItemStack stack) {
-        var out = this.processCommon(existing, recipeHolder, Ingredient.of(stack));
-        existing.add(stack.getItem());
-        return out;
-    }
-
-    public @Nullable RecipeHolder<?> processTag(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient) {
+    public @Nullable RecipeHolder<?> makeRecipe(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient) {
         var out = this.processCommon(existing, recipeHolder, ingredient);
-        for (var input : ingredient.getValues()[0].getItems()) {
+        for (var input : ingredient.getItems()) {
             existing.add(input.getItem());
         }
-        return out;
-    }
-
-    public @Nullable RecipeHolder<?> processItem(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient) {
-        var out = this.processCommon(existing, recipeHolder, ingredient);
-        existing.add(((Ingredient.ItemValue) ingredient.getValues()[0]).item().getItem());
         return out;
     }
 
