@@ -1,8 +1,7 @@
 package dev.qther.ars_unification.client.jei;
 
 import alexthw.not_enough_glyphs.common.glyphs.effects.EffectFlatten;
-import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
-import com.hollingsworth.arsnouveau.client.jei.CraftingTerminalTransferHandler;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCut;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.recipe.CutRecipe;
@@ -14,11 +13,8 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.IRecipeTransferRegistration;
-import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
@@ -68,51 +64,10 @@ public class JEIArsUnificationPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(new ItemStack(EffectCut.INSTANCE.glyphItem), CUT_RECIPE_TYPE);
+        registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectCut.INSTANCE, AugmentSensitive.INSTANCE), CUT_RECIPE_TYPE);
 
         if (ModList.get().isLoaded("not_enough_glyphs")) {
-            registry.addRecipeCatalyst(new ItemStack(EffectFlatten.INSTANCE.glyphItem), PRESS_RECIPE_TYPE);
+            registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectFlatten.INSTANCE, AugmentSensitive.INSTANCE), PRESS_RECIPE_TYPE);
         }
-    }
-
-    @Override
-    public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
-        CraftingTerminalTransferHandler.registerTransferHandlers(registration);
-    }
-
-    private static IJeiRuntime jeiRuntime;
-
-    @Override
-    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        JEIArsUnificationPlugin.jeiRuntime = jeiRuntime;
-    }
-
-    static {
-        IAutoFillTerminal.updateSearch.add(new IAutoFillTerminal.ISearchHandler() {
-
-            @Override
-            public void setSearch(String text) {
-                if (jeiRuntime != null) {
-                    if (jeiRuntime.getIngredientFilter() != null) {
-                        jeiRuntime.getIngredientFilter().setFilterText(text);
-                    }
-                }
-            }
-
-            @Override
-            public String getSearch() {
-                if (jeiRuntime != null) {
-                    if (jeiRuntime.getIngredientFilter() != null) {
-                        return jeiRuntime.getIngredientFilter().getFilterText();
-                    }
-                }
-                return "";
-            }
-
-            @Override
-            public String getName() {
-                return "JEI";
-            }
-        });
     }
 }

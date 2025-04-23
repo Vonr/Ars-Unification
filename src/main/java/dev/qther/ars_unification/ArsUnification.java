@@ -1,5 +1,8 @@
 package dev.qther.ars_unification;
 
+import com.google.common.base.Stopwatch;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.processors.crush.*;
@@ -10,9 +13,15 @@ import dev.qther.ars_unification.processors.cut.ModernIndustrializationCuttingMa
 import dev.qther.ars_unification.processors.press.AE2CircuitPrintingProcesser;
 import dev.qther.ars_unification.processors.press.ModernIndustrializationCompressorProcessor;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -52,7 +61,7 @@ public class ArsUnification {
     }
 
     record ProcessorInfo(ModConfigSpec.IntValue priority, String modid,
-                         Function<RecipeManager, Processor> constructor) {
+                         Function<RecipeManager, Processor<?, ?>> constructor) {
     }
 
     private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
@@ -93,13 +102,18 @@ public class ArsUnification {
 
         PROCESSORS.sort(Comparator.comparing(p -> p.priority.get()));
 
+        var totalSw = Stopwatch.createStarted();
         for (var processor : PROCESSORS.reversed()) {
             if (processor.priority.get() != -1 && mods.isLoaded(processor.modid)) {
                 var p = processor.constructor.apply(recipeManager);
-                ArsUnification.LOGGER.info("Running processor {}", p.getClass().getName());
+                var sw = Stopwatch.createStarted();
                 p.processRecipes();
+                sw.stop();
+                ArsUnification.LOGGER.info("{} processed recipes in {}", p.getClass().getSimpleName(), sw);
             }
         }
+        totalSw.stop();
+        ArsUnification.LOGGER.info("Finished processing recipes in {}", totalSw);
     }
 
     public static ResourceLocation prefix(String str) {
@@ -143,5 +157,12 @@ public class ArsUnification {
         }
 
         return set;
+    }
+
+    public static ItemStack withAugmentTooltip(AbstractSpellPart item, AbstractAugment augment) {
+        var stack = item.getGlyph().getDefaultInstance();
+        var component = Component.translatable("ars_unification.augment_with", Component.translatable(augment.getLocalizationKey())).withStyle(ChatFormatting.RESET).withStyle(ChatFormatting.GOLD);
+        stack.set(DataComponents.LORE, new ItemLore(ObjectLists.singleton(component), ObjectLists.singleton(component)));
+        return stack;
     }
 }

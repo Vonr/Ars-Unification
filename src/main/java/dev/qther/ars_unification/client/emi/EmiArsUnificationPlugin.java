@@ -1,5 +1,6 @@
 package dev.qther.ars_unification.client.emi;
 
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCut;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 @EmiEntrypoint
 public class EmiArsUnificationPlugin implements EmiPlugin {
-    public static final EmiStack CUT_GLYPH = EmiStack.of(EffectCut.INSTANCE.glyphItem);
+    public static final EmiStack CUT_GLYPH = EmiStack.of(ArsUnification.withAugmentTooltip(EffectCut.INSTANCE, AugmentSensitive.INSTANCE));
     public static final EmiRecipeCategory CUT_CATEGORY = new EmiRecipeCategory(ArsUnification.prefix("cut"), CUT_GLYPH);
 
     public static EmiStack FLATTEN_GLYPH;
