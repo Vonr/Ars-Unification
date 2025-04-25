@@ -9,19 +9,16 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCut;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import dev.qther.ars_unification.recipe.CutRecipe;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
+import dev.qther.ars_unification.util.ItemUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -42,8 +39,7 @@ public class EffectCutMixin extends AbstractEffectMixin {
         return set;
     }
 
-
-    @Inject(method = "addAugmentDescriptions", at = @At("TAIL"))
+    @Inject(method = "addAugmentDescriptions", at = @At("RETURN"))
     public void editAugmentDescriptions(Map<AbstractAugment, String> map, CallbackInfo ci) {
         map.put(AugmentAOE.INSTANCE, "Increases the radius in which to look for items to process.");
         map.put(AugmentPierce.INSTANCE, "Increases the number of items Cut will process.");
@@ -52,57 +48,14 @@ public class EffectCutMixin extends AbstractEffectMixin {
 
     @Override
     public void wrapResolve(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver, Operation<Void> original) {
-        if (spellStats.isSensitive()) {
+        if (world instanceof ServerLevel level && spellStats.isSensitive()) {
             double aoeBuff = spellStats.getAoeMultiplier();
             int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
             int limit = (int) (4 + (4 * aoeBuff) + (4 * pierceBuff));
-            List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(BlockPos.containing(rayTraceResult.getLocation())).inflate(aoeBuff + 1.0));
-            if (!itemEntities.isEmpty()) {
-                ars_unification$cutItems(world, itemEntities, limit);
-            }
+            List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, new AABB(BlockPos.containing(rayTraceResult.getLocation())).inflate(aoeBuff + 1.0));
+            ItemUtil.processItems(level, itemEntities, limit, AURecipeRegistry.CUT_TYPE.get(), r -> r.getRolledOutputs(level.random));
         } else {
             original.call(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
-        }
-    }
-
-
-    @Unique
-    private static void ars_unification$cutItems(Level world, List<ItemEntity> itemEntities, int limit) {
-        List<RecipeHolder<CutRecipe>> recipes = world.getRecipeManager().getAllRecipesFor(AURecipeRegistry.CUT_TYPE.get());
-        CutRecipe lastHit = null; // Cache this for AOE hits
-        int itemsCut = 0;
-        for (ItemEntity IE : itemEntities) {
-            if (itemsCut >= limit) {
-                break;
-            }
-
-            ItemStack stack = IE.getItem();
-            Item item = stack.getItem();
-
-            if (lastHit == null || !lastHit.matches(item.getDefaultInstance(), world)) {
-                RecipeHolder<CutRecipe> holder = null;
-                for (var recipe : recipes) {
-                    if (recipe.value().matches(item.getDefaultInstance(), world)) {
-                        holder = recipe;
-                        break;
-                    }
-                }
-                lastHit = holder == null ? null : holder.value();
-            }
-
-            if (lastHit == null) {
-                continue;
-            }
-
-            while (!stack.isEmpty() && itemsCut < limit) {
-                List<ItemStack> outputs = lastHit.getRolledOutputs(world.random);
-                stack.shrink(1);
-                itemsCut++;
-                for (ItemStack result : outputs) {
-                    world.addFreshEntity(new ItemEntity(world, IE.getX(), IE.getY(), IE.getZ(), result.copy()));
-                }
-            }
-
         }
     }
 }

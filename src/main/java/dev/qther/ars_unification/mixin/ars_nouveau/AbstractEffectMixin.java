@@ -7,8 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
@@ -20,6 +18,8 @@ public abstract class AbstractEffectMixin extends AbstractSpellPartMixin {
         original.call(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
     }
 
-    @Inject(method = "addAugmentDescriptions", at = @At("RETURN"))
-    public void editAugmentDescriptions(Map<AbstractAugment, String> map, CallbackInfo ci) {}
+    @Override
+    public void editAugmentDescriptions(Map<AbstractAugment, String> map, CallbackInfo ci) {
+        super.editAugmentDescriptions(map, ci);
+    }
 }
