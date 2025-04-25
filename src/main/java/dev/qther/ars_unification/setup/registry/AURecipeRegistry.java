@@ -1,5 +1,6 @@
 package dev.qther.ars_unification.setup.registry;
 
+import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.recipe.CutRecipe;
 import dev.qther.ars_unification.recipe.PressRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,11 +10,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
-
 public class AURecipeRegistry {
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, MODID);
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, ArsUnification.MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, ArsUnification.MODID);
 
     public static final String CUT_RECIPE_ID = "cut";
     public static final String PRESS_RECIPE_ID = "press";
