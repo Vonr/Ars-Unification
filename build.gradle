@@ -210,6 +210,8 @@ dependencies {
     compileOnly "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.smartbrainlib_version}"
 
     implementation "curse.maven:farmers-delight-398521:${project.farmers_delight_version}"
+
+    implementation "curse.maven:ars-technica-1096161:${project.ars_technica_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

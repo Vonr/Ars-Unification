@@ -176,3 +176,14 @@ side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     modrinth = "ae2"
     curseforge = "applied-energistics-2"
+
+
+[[dependencies."${mod_id}"]]
+    modId="ars_technica"
+    type="optional"
+    versionRange="${ars_technica_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+    [dependencies."${mod_id}".mc-publish]
+    # modrinth = "ars-technica"
+    curseforge = "ars-technica"

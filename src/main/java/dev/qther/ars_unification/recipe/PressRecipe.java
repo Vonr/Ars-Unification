@@ -1,10 +1,14 @@
 package dev.qther.ars_unification.recipe;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.SpecialSingleInputRecipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.qther.ars_unification.ArsUnification;
+import dev.qther.ars_unification.Config;
+import dev.qther.ars_unification.compat.AUArsTechnicaCompat;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,17 +35,19 @@ public record PressRecipe(
         this(input, outputs, false);
     }
 
-    public List<ItemStack> getRolledOutputs(RandomSource random) {
+    public List<ItemStack> getRolledOutputs(SpellResolver resolver, SpellStats spellStats, RandomSource random) {
         List<ItemStack> finalOutputs = new ArrayList<>();
         for (PressOutput pressRoll : outputs) {
+            var doubleFromTechnica = pressRoll.chance < 1.0 && ModList.get().isLoaded("ars_technica") && Config.CONFIG.ARS_TECHNICA_TRANSMUTATION_FOCUS_PRESS_CHANCE_OUTPUT_DOUBLING.get() && AUArsTechnicaCompat.shouldDoubleOutputs(resolver);
+
             if (random.nextDouble() <= pressRoll.chance) {
-                if (pressRoll.maxRange > 1) {
-                    int num = random.nextInt(pressRoll.maxRange) + 1;
-                    for (int i = 0; i < num; i++) {
+                int num = pressRoll.maxRange > 1 ? random.nextInt(pressRoll.maxRange) + 1 : 1;
+                for (int i = 0; i < num; i++) {
+                    if (doubleFromTechnica) {
+                        finalOutputs.add(pressRoll.stack.copyWithCount(Math.min(pressRoll.stack.getMaxStackSize(), pressRoll.stack.getCount() * 2)));
+                    } else {
                         finalOutputs.add(pressRoll.stack.copy());
                     }
-                } else {
-                    finalOutputs.add(pressRoll.stack.copy());
                 }
             }
         }
