@@ -1,0 +1,13 @@
+{
+  "ars_nouveau.augment_desc.glyph_cut_glyph_aoe": "Aumenta o raio no qual procurar itens para processar.",
+  "ars_nouveau.augment_desc.glyph_cut_glyph_pierce": "Aumenta a quantidade de itens que o Corte irá processar.",
+  "ars_nouveau.augment_desc.glyph_cut_glyph_sensitive": "Corte tentará processar itens próximos.",
+  "ars_nouveau.augment_desc.glyph_flatten_glyph_aoe": "Aumenta o raio no qual procurar itens para processar.",
+  "ars_nouveau.augment_desc.glyph_flatten_glyph_pierce": "Aumenta a quantidade de itens que o Achatamento irá processar.",
+  "ars_nouveau.augment_desc.glyph_flatten_glyph_sensitive": "Achatamento tentará processar itens próximos.",
+  "ars_unification.augment_with": "Aprimore este glifo com %s para usar essas receitas.",
+  "ars_unification.cut_recipe": "Glifo de Corte",
+  "ars_unification.press_recipe": "Glifo de Achatamento",
+  "emi.category.ars_unification.cut": "Glifo de Corte",
+  "emi.category.ars_unification.press": "Glifo de Achatamento"
+}
