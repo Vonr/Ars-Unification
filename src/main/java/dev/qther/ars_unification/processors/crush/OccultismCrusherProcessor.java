@@ -8,24 +8,23 @@ import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class OccultismCrusherProcessor extends Processor<TieredSingleRecipeInput, CrushingRecipe> {
-    public OccultismCrusherProcessor(RecipeManager recipeManager) {
-        super(recipeManager, OccultismRecipes.CRUSHING_TYPE.get());
+    public OccultismCrusherProcessor(MinecraftServer server) {
+        super(server, OccultismRecipes.CRUSHING_TYPE.get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager());
     }
 
     @Override
@@ -57,16 +56,18 @@ public class OccultismCrusherProcessor extends Processor<TieredSingleRecipeInput
 
     public static float getMultiplier() {
         var tier = Config.CONFIG.OCCULTISM_CRUSHER_TIER.getAsInt();
-        return switch (tier) {
-            case 1 -> Occultism.SERVER_CONFIG.spiritJobs.tier1CrusherOutputMultiplier.get().floatValue();
-            case 2 -> Occultism.SERVER_CONFIG.spiritJobs.tier2CrusherOutputMultiplier.get().floatValue();
-            case 3 -> Occultism.SERVER_CONFIG.spiritJobs.tier3CrusherOutputMultiplier.get().floatValue();
-            case 4 -> Occultism.SERVER_CONFIG.spiritJobs.tier4CrusherOutputMultiplier.get().floatValue();
+        var config = switch (tier) {
+            case 1 -> Occultism.SERVER_CONFIG.spiritJobs.tier1CrusherOutputMultiplier;
+            case 2 -> Occultism.SERVER_CONFIG.spiritJobs.tier2CrusherOutputMultiplier;
+            case 3 -> Occultism.SERVER_CONFIG.spiritJobs.tier3CrusherOutputMultiplier;
+            case 4 -> Occultism.SERVER_CONFIG.spiritJobs.tier4CrusherOutputMultiplier;
             default -> {
                 ArsUnification.LOGGER.warn("Unknown Occultism crusher tier {}", tier);
-                yield Occultism.SERVER_CONFIG.spiritJobs.tier1CrusherOutputMultiplier.get().floatValue();
+                yield Occultism.SERVER_CONFIG.spiritJobs.tier1CrusherOutputMultiplier;
             }
         };
+        
+        return config.get().floatValue();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class OccultismCrusherProcessor extends Processor<TieredSingleRecipeInput
 
         ItemStack result;
         try {
-            result = recipe.getResultItem(null);
+            result = recipe.getResultItem(this.registryAccess()).copy();
         } catch (Exception e) {
             ArsUnification.LOGGER.warn("Failed to get result item", e);
             return null;

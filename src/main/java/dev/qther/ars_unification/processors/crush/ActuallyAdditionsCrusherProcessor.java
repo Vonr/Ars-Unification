@@ -5,23 +5,23 @@ import de.ellpeck.actuallyadditions.mod.crafting.CrushingRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class ActuallyAdditionsCrusherProcessor extends Processor<RecipeInput, CrushingRecipe> {
-    public ActuallyAdditionsCrusherProcessor(RecipeManager recipeManager) {
-        super(recipeManager, ActuallyRecipes.Types.CRUSHING.get());
+    public ActuallyAdditionsCrusherProcessor(MinecraftServer server) {
+        super(server, ActuallyRecipes.Types.CRUSHING.get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

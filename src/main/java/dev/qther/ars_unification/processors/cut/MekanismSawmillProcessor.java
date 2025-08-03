@@ -5,23 +5,23 @@ import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
 import mekanism.api.recipes.MekanismRecipeTypes;
 import mekanism.api.recipes.SawmillRecipe;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class MekanismSawmillProcessor extends Processor<SingleRecipeInput, SawmillRecipe> {
-    public MekanismSawmillProcessor(RecipeManager recipeManager) {
-        super(recipeManager, MekanismRecipeTypes.TYPE_SAWING.get());
+    public MekanismSawmillProcessor(MinecraftServer server) {
+        super(server, MekanismRecipeTypes.TYPE_SAWING.get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.cutRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.cutRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

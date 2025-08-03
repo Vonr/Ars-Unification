@@ -8,23 +8,23 @@ import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class AE2CircuitPrintingProcesser extends Processor<RecipeInput, InscriberRecipe> {
-    public AE2CircuitPrintingProcesser(RecipeManager recipeManager) {
-        super(recipeManager, AERecipeTypes.INSCRIBER);
+    public AE2CircuitPrintingProcesser(MinecraftServer server) {
+        super(server, AERecipeTypes.INSCRIBER);
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.pressRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.pressRecipesIngredientSet(this.recipeManager());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AE2CircuitPrintingProcesser extends Processor<RecipeInput, Inscribe
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends InscriberRecipe> recipeHolder, Ingredient ingredient) {
         return new RecipeWrapper.Press(recipeHolder.id(), ingredient)
-                .withItems(recipeHolder.value().getResultItem())
+                .withItems(recipeHolder.value().getResultItem().copy())
                 .asHolder();
     }
 }

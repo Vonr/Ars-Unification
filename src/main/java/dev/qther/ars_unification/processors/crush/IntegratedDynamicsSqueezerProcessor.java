@@ -4,11 +4,11 @@ import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.cyclops.integrateddynamics.RegistryEntries;
 import org.cyclops.integrateddynamics.core.recipe.type.RecipeSqueezer;
 import org.jetbrains.annotations.Nullable;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class IntegratedDynamicsSqueezerProcessor extends Processor<CraftingInput, RecipeSqueezer> {
-    public IntegratedDynamicsSqueezerProcessor(RecipeManager recipeManager) {
+    public IntegratedDynamicsSqueezerProcessor(MinecraftServer server) {
         super(
-                recipeManager,
+                server,
                 Config.CONFIG.INTEGRATEDDYNAMICS_USE_MECHANICAL.get()
                         ? RegistryEntries.RECIPETYPE_MECHANICAL_SQUEEZER.get()
                         : RegistryEntries.RECIPETYPE_SQUEEZER.get()
@@ -27,7 +27,7 @@ public class IntegratedDynamicsSqueezerProcessor extends Processor<CraftingInput
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

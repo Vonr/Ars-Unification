@@ -3,10 +3,10 @@ package dev.qther.ars_unification.processors.cut;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.crafting.CuttingBoardRecipe;
 import vectorwing.farmersdelight.common.crafting.CuttingBoardRecipeInput;
@@ -15,13 +15,13 @@ import vectorwing.farmersdelight.common.registry.ModRecipeTypes;
 import java.util.Set;
 
 public class FarmersDelightCuttingBoardProcessor extends Processor<CuttingBoardRecipeInput, CuttingBoardRecipe> {
-    public FarmersDelightCuttingBoardProcessor(RecipeManager recipeManager) {
-        super(recipeManager, ModRecipeTypes.CUTTING.get());
+    public FarmersDelightCuttingBoardProcessor(MinecraftServer server) {
+        super(server, ModRecipeTypes.CUTTING.get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.cutRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.cutRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

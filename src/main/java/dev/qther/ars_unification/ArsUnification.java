@@ -19,6 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -57,61 +58,63 @@ public class ArsUnification {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onDatapackSync(OnDatapackSyncEvent event) {
-        processRecipes(event.getPlayerList().getServer().getRecipeManager());
+        processRecipes(event.getPlayerList().getServer());
     }
 
-    record ProcessorInfo(ModConfigSpec.IntValue priority, String modid,
-                         Function<RecipeManager, Processor<?, ?>> constructor) {
+    record ProcessorInfo(String modid, ModConfigSpec.IntValue priority,
+                         Function<MinecraftServer, Processor<?, ?>> constructor) {
     }
 
     private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
     private static boolean processorsRegistered = false;
 
-    public static void processRecipes(RecipeManager recipeManager) {
+    public static void processRecipes(MinecraftServer server) {
+        if (!Config.SPEC.isLoaded()) {
+            return;
+        }
+
         var mods = ModList.get();
+        var cfg = Config.CONFIG;
 
         if (!processorsRegistered) {
             processorsRegistered = true;
 
             // Crush
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_CRUSHER, "mekanism", MekanismCrusherProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ENDERIO_SAG_MILL, "enderio_machines", EnderIOSAGMillProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.INTEGRATEDDYNAMICS_SQUEEZER, "integrateddynamics", IntegratedDynamicsSqueezerProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.ACTUALLYADDITIONS_CRUSHER, "actuallyadditions", ActuallyAdditionsCrusherProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_MACERATOR, "modern_industrialization", ModernIndustrializationMaceratorProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_CRUSHER, "immersiveengineering", ImmersiveEngineeringCrusherProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.OCCULTISM_CRUSHER, "occultism", OccultismCrusherProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.CRUSH_AE2_INSCRIBER, "ae2", AE2InscriberProcesser::new));
+            PROCESSORS.add(new ProcessorInfo("mekanism", cfg.MEKANISM_CRUSHER, MekanismCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("enderio_machines", cfg.ENDERIO_SAG_MILL, EnderIOSAGMillProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("integrateddynamics", cfg.INTEGRATEDDYNAMICS_SQUEEZER, IntegratedDynamicsSqueezerProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("actuallyadditions", cfg.ACTUALLYADDITIONS_CRUSHER, ActuallyAdditionsCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("modern_industrialization", cfg.MODERN_INDUSTRIALIZATION_MACERATOR, ModernIndustrializationMaceratorProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("immersiveengineering", cfg.IMMERSIVE_ENGINEERING_CRUSHER, ImmersiveEngineeringCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("occultism", cfg.OCCULTISM_CRUSHER, OccultismCrusherProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("ae2", cfg.CRUSH_AE2_INSCRIBER, AE2InscriberProcesser::new));
 
             // Cut
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MEKANISM_SAWMILL, "mekanism", MekanismSawmillProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, "modern_industrialization", ModernIndustrializationCuttingMachineProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.FARMERS_DELIGHT_CUTTING_BOARD, "farmersdelight", FarmersDelightCuttingBoardProcessor::new));
-            PROCESSORS.add(new ProcessorInfo(Config.CONFIG.IMMERSIVE_ENGINEERING_SAWMILL, "immersiveengineering", ImmersiveEngineeringSawmillProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("mekanism", cfg.MEKANISM_SAWMILL, MekanismSawmillProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("modern_industrialization", cfg.MODERN_INDUSTRIALIZATION_CUTTING_MACHINE, ModernIndustrializationCuttingMachineProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("farmersdelight", cfg.FARMERS_DELIGHT_CUTTING_BOARD, FarmersDelightCuttingBoardProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("immersiveengineering", cfg.IMMERSIVE_ENGINEERING_SAWMILL, ImmersiveEngineeringSawmillProcessor::new));
 
             if (mods.isLoaded("not_enough_glyphs")) {
                 // Press
-                PROCESSORS.add(new ProcessorInfo(Config.CONFIG.MODERN_INDUSTRIALIZATION_COMPRESSOR, "modern_industrialization", ModernIndustrializationCompressorProcessor::new));
-                PROCESSORS.add(new ProcessorInfo(Config.CONFIG.PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING, "ae2", AE2CircuitPrintingProcesser::new));
+                PROCESSORS.add(new ProcessorInfo("modern_industrialization", cfg.MODERN_INDUSTRIALIZATION_COMPRESSOR, ModernIndustrializationCompressorProcessor::new));
+                PROCESSORS.add(new ProcessorInfo("ae2", cfg.PRESS_AE2_INSCRIBER_CIRCUIT_PRINTING, AE2CircuitPrintingProcesser::new));
             }
         }
 
-        if (!Config.SPEC.isLoaded()) {
-            return;
-        }
-
-        PROCESSORS.sort(Comparator.comparing(p -> p.priority.get()));
+        PROCESSORS.sort(Comparator.comparingInt((ProcessorInfo p) -> p.priority.get()).reversed());
 
         var totalSw = Stopwatch.createStarted();
-        for (var processor : PROCESSORS.reversed()) {
+        for (var processor : PROCESSORS) {
             if (processor.priority.get() != -1 && mods.isLoaded(processor.modid)) {
-                var p = processor.constructor.apply(recipeManager);
+                var p = processor.constructor.apply(server);
                 var sw = Stopwatch.createStarted();
                 p.processRecipes();
                 sw.stop();
                 ArsUnification.LOGGER.info("{} processed recipes in {}", p.getClass().getSimpleName(), sw);
             }
         }
+
         totalSw.stop();
         ArsUnification.LOGGER.info("Finished processing recipes in {}", totalSw);
     }
@@ -136,7 +139,7 @@ public class ArsUnification {
     public static Set<Item> cutRecipesIngredientSet(RecipeManager recipeManager) {
         var recipes = recipeManager.getAllRecipesFor(AURecipeRegistry.CUT_TYPE.get());
 
-        Set<Item> set = new ObjectOpenHashSet<>(recipes.size());
+        Set<Item> set = new ObjectOpenHashSet<>();
         for (var recipe : recipes) {
             for (var stack : recipe.value().input().getItems()) {
                 set.add(stack.getItem());
@@ -149,7 +152,7 @@ public class ArsUnification {
     public static Set<Item> pressRecipesIngredientSet(RecipeManager recipeManager) {
         var recipes = recipeManager.getAllRecipesFor(AURecipeRegistry.PRESS_TYPE.get());
 
-        Set<Item> set = new ObjectOpenHashSet<>(recipes.size());
+        Set<Item> set = new ObjectOpenHashSet<>();
         for (var recipe : recipes) {
             for (var stack : recipe.value().input().getItems()) {
                 set.add(stack.getItem());

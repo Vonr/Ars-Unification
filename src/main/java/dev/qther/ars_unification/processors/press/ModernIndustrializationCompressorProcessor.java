@@ -5,22 +5,22 @@ import aztech.modern_industrialization.machines.recipe.MachineRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.MIProcessor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class ModernIndustrializationCompressorProcessor extends MIProcessor {
-    public ModernIndustrializationCompressorProcessor(RecipeManager recipeManager) {
-        super(recipeManager, MIMachineRecipeTypes.COMPRESSOR);
+    public ModernIndustrializationCompressorProcessor(MinecraftServer server) {
+        super(server, MIMachineRecipeTypes.COMPRESSOR);
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.pressRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.pressRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

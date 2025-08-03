@@ -5,23 +5,23 @@ import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.api.recipes.MekanismRecipeTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class MekanismCrusherProcessor extends Processor<SingleRecipeInput, ItemStackToItemStackRecipe> {
-    public MekanismCrusherProcessor(RecipeManager recipeManager) {
-        super(recipeManager, MekanismRecipeTypes.TYPE_CRUSHING.get());
+    public MekanismCrusherProcessor(MinecraftServer server) {
+        super(server, MekanismRecipeTypes.TYPE_CRUSHING.get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.crushRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.crushRecipesIngredientSet(this.recipeManager());
     }
 
     @Override

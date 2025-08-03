@@ -1,10 +1,11 @@
 package dev.qther.ars_unification.processors;
 
-import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.mixin.RecipeManagerAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.Nullable;
@@ -12,12 +13,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
-    public final RecipeManager recipeManager;
+    public final MinecraftServer server;
     public final RecipeType<? extends T> recipeType;
 
-    public Processor(RecipeManager recipeManager, RecipeType<? extends T> recipeType) {
-        this.recipeManager = recipeManager;
+    public Processor(MinecraftServer server, RecipeType<? extends T> recipeType) {
+        this.server = server;
         this.recipeType = recipeType;
+    }
+
+    public RecipeManager recipeManager() {
+        return server.getRecipeManager();
+    }
+
+    public RegistryAccess registryAccess() {
+        return server.registryAccess();
     }
 
     public abstract Set<Item> getExistingInputs();
@@ -28,7 +37,7 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
         var existing = this.getExistingInputs();
         var recipes = this.getSortedRecipes();
 
-        Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager).getByName());
+        Map<ResourceLocation, RecipeHolder<?>> toReplace = new Object2ObjectOpenHashMap<>(((RecipeManagerAccessor) this.recipeManager()).getByName());
 
         for (var holder : recipes) {
             if (Config.isExcluded(holder.id())) {
@@ -95,7 +104,7 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
             }
         }
 
-        this.recipeManager.replaceRecipes(toReplace.values());
+        this.recipeManager().replaceRecipes(toReplace.values());
     }
 
     public abstract @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient);
@@ -109,7 +118,7 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
     }
 
     public List<? extends RecipeHolder<? extends T>> getSortedRecipes() {
-        var recipes = new ArrayList<>(this.recipeManager.getAllRecipesFor(this.recipeType));
+        var recipes = new ArrayList<>(this.recipeManager().getAllRecipesFor(this.recipeType));
         recipes.sort(Comparator.comparing(r -> r.id().toString()));
         return recipes;
     }

@@ -1,18 +1,27 @@
 package dev.qther.ars_unification.processors;
 
-import aztech.modern_industrialization.MIFluids;
 import aztech.modern_industrialization.machines.recipe.MachineRecipe;
+import dev.qther.ars_unification.ArsUnification;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> {
-    public MIProcessor(RecipeManager recipeManager, RecipeType<MachineRecipe> type) {
-        super(recipeManager, type);
+    public Fluid[] ignoredFluids;
+
+    public MIProcessor(MinecraftServer server, RecipeType<MachineRecipe> type, Fluid[] ignoredFluids) {
+        super(server, type);
+        this.ignoredFluids = ignoredFluids;
+    }
+
+    public MIProcessor(MinecraftServer server, RecipeType<MachineRecipe> type) {
+        this(server, type, new Fluid[0]);
     }
 
     @Override
@@ -21,8 +30,23 @@ public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> 
             return null;
         }
 
+        if (this.ignoredFluids.length == 0 && !recipe.fluidInputs.isEmpty()) {
+            return null;
+        }
+
         for (var fluidIn : recipe.fluidInputs) {
-            if (!Arrays.stream(fluidIn.fluid().getStacks()).allMatch(f -> f.is(MIFluids.LUBRICANT.asFluid()))) {
+            var fluidStacks = fluidIn.fluid().getStacks();
+            var isIgnored = fluidStacks.length == 0;
+            fluidIngredients: for (var fluid : fluidStacks) {
+                for (var ignored : ignoredFluids) {
+                    if (fluid.is(ignored)) {
+                        isIgnored = true;
+                        break fluidIngredients;
+                    }
+                }
+            }
+
+            if (!isIgnored) {
                 return null;
             }
         }

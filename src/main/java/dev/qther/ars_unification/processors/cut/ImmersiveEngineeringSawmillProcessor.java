@@ -5,23 +5,23 @@ import blusunrize.immersiveengineering.api.crafting.SawmillRecipe;
 import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.processors.Processor;
 import dev.qther.ars_unification.recipe.RecipeWrapper;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class ImmersiveEngineeringSawmillProcessor extends Processor<RecipeInput, SawmillRecipe> {
-    public ImmersiveEngineeringSawmillProcessor(RecipeManager recipeManager) {
-        super(recipeManager, IERecipeTypes.SAWMILL.type().get());
+    public ImmersiveEngineeringSawmillProcessor(MinecraftServer server) {
+        super(server, IERecipeTypes.SAWMILL.type().get());
     }
 
     @Override
     public Set<Item> getExistingInputs() {
-        return ArsUnification.cutRecipesIngredientSet(this.recipeManager);
+        return ArsUnification.cutRecipesIngredientSet(this.recipeManager());
     }
 
     @Override
