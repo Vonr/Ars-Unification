@@ -7,6 +7,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 
 public class JeiNegCompat {
     public static void registerCategories(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectFlatten.INSTANCE, AugmentSensitive.INSTANCE), JeiArsUnificationPlugin.PRESS_RECIPE_TYPE);
+        registry.addRecipeCatalyst(ArsUnification.withAugmentTooltip(EffectFlatten.INSTANCE, AugmentSensitive.INSTANCE), JeiArsUnificationPlugin.PRESS_RECIPE_TYPE.get());
     }
 }

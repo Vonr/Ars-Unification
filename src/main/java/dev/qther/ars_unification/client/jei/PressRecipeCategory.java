@@ -15,9 +15,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
-public class PressRecipeCategory implements IRecipeCategory<PressRecipe> {
+public class PressRecipeCategory implements IRecipeCategory<RecipeHolder<PressRecipe>> {
 
     public IDrawable background;
     public IDrawable icon;
@@ -31,8 +32,8 @@ public class PressRecipeCategory implements IRecipeCategory<PressRecipe> {
 
     @Override
     @NotNull
-    public RecipeType<PressRecipe> getRecipeType() {
-        return JeiArsUnificationPlugin.PRESS_RECIPE_TYPE;
+    public RecipeType<RecipeHolder<PressRecipe>> getRecipeType() {
+        return JeiArsUnificationPlugin.PRESS_RECIPE_TYPE.get();
     }
 
     @Override
@@ -57,7 +58,8 @@ public class PressRecipeCategory implements IRecipeCategory<PressRecipe> {
     }
 
     @Override
-    public void draw(PressRecipe recipe, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<PressRecipe> holder, @NotNull IRecipeSlotsView slotsView, @NotNull GuiGraphics matrixStack, double mouseX, double mouseY) {
+        var recipe = holder.value();
         cachedArrows.draw(matrixStack, 22, 6);
         Font renderer = Minecraft.getInstance().font;
         for (int i = 0; i < recipe.outputs().size(); i++) {
@@ -70,7 +72,8 @@ public class PressRecipeCategory implements IRecipeCategory<PressRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, PressRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<PressRecipe> holder, @NotNull IFocusGroup focuses) {
+        var recipe = holder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 5).addIngredients(recipe.input());
         for (int i = 0; i < recipe.outputs().size(); i++) {
             PressRecipe.PressOutput output = recipe.outputs().get(i);
