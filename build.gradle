@@ -191,27 +191,27 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-    implementation "de.ellpeck:actuallyadditions:${project.actuallyadditions_version}+mc${project.minecraft_version}"
+    compileOnly "de.ellpeck:actuallyadditions:${project.actuallyadditions_version}+mc${project.minecraft_version}"
 
-    implementation "org.appliedenergistics:appliedenergistics2:${project.ae2_version}"
+    compileOnly "org.appliedenergistics:appliedenergistics2:${project.ae2_version}"
     compileOnly "org.appliedenergistics:appliedenergistics2:${project.ae2_version}:api"
 
-    implementation "com.enderio:enderio-machines:${project.enderio_version}"
+    compileOnly "com.enderio:enderio-machines:${project.enderio_version}"
 
-    implementation "blusunrize.immersiveengineering:ImmersiveEngineering:${project.minecraft_version}-${project.immersive_engineering_version}"
+    compileOnly "blusunrize.immersiveengineering:ImmersiveEngineering:${project.minecraft_version}-${project.immersive_engineering_version}"
 
-    implementation "org.cyclops.integrateddynamics:integrateddynamics-${project.minecraft_version}-neoforge:${project.integrateddynamics_version}:deobf"
+    compileOnly "org.cyclops.integrateddynamics:integrateddynamics-${project.minecraft_version}-neoforge:${project.integrateddynamics_version}:deobf"
 
     implementation "mekanism:Mekanism:${project.minecraft_version}-${project.mekanism_version}"
 
-    implementation "aztech:Modern-Industrialization:${project.modern_industrialization_version}"
+    compileOnly "aztech:Modern-Industrialization:${project.modern_industrialization_version}"
 
-    implementation "com.klikli_dev:occultism-${project.minecraft_version}-neoforge:${project.occultism_version}"
+    compileOnly "com.klikli_dev:occultism-${project.minecraft_version}-neoforge:${project.occultism_version}"
     compileOnly "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.smartbrainlib_version}"
 
-    implementation "curse.maven:farmers-delight-398521:${project.farmers_delight_version}"
+    compileOnly "curse.maven:farmers-delight-398521:${project.farmers_delight_version}"
 
-    implementation "curse.maven:ars-technica-1096161:${project.ars_technica_version}"
+    compileOnly "curse.maven:ars-technica-1096161:${project.ars_technica_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
