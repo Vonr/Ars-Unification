@@ -68,10 +68,26 @@ public class ArsUnification {
     private static final List<ProcessorInfo> PROCESSORS = new ArrayList<>();
     private static boolean processorsRegistered = false;
 
+    // OnDatapackSyncEvent fires on every player join, but the recipe
+    // manager's contents only actually change on a fresh server start or a
+    // /reload. Re-running every processor from scratch on each join was
+    // measured costing 400-660ms of main-thread time per join on a modpack
+    // with several integrations enabled, directly causing "Can't keep up"
+    // tick warnings correlated 1:1 with player joins. Skip the rebuild
+    // unless the RecipeManager instance has actually changed since we last
+    // processed it.
+    private static RecipeManager lastProcessedRecipeManager = null;
+
     public static void processRecipes(MinecraftServer server) {
         if (!Config.SPEC.isLoaded()) {
             return;
         }
+
+        RecipeManager currentRecipeManager = server.getRecipeManager();
+        if (currentRecipeManager == lastProcessedRecipeManager) {
+            return;
+        }
+        lastProcessedRecipeManager = currentRecipeManager;
 
         var mods = ModList.get();
         var cfg = Config.CONFIG;
