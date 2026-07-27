@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-@EventBusSubscriber(modid = ArsUnification.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ArsUnification.MODID)
 public class Config {
     public static final Config CONFIG;
     public static final ModConfigSpec SPEC;
