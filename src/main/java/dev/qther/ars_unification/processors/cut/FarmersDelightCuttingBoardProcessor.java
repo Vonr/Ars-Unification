@@ -37,8 +37,8 @@ public class FarmersDelightCuttingBoardProcessor extends Processor<CuttingBoardR
     @Override
     public @Nullable RecipeHolder<?> processCommon(Set<Item> existing, RecipeHolder<? extends CuttingBoardRecipe> recipeHolder, Ingredient ingredient) {
         var wrapper = new RecipeWrapper.Cut(recipeHolder.id(), ingredient);
-        for (var output : recipeHolder.value().getResults()) {
-            wrapper = wrapper.withItems(output);
+        for (var output : recipeHolder.value().getRollableResults()) {
+            wrapper = wrapper.withItems(output.stack().copy(), output.chance());
         }
 
         return wrapper.asHolder();
