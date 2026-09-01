@@ -40,6 +40,9 @@ public class EmiArsUnificationPlugin implements EmiPlugin {
     public void registerRecipes(@NotNull EmiRegistry registry) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         manager.getAllRecipesFor(AURecipeRegistry.CUT_TYPE.get()).stream().map(EmiCutRecipe::new).forEach(registry::addRecipe);
-        manager.getAllRecipesFor(AURecipeRegistry.PRESS_TYPE.get()).stream().map(EmiPressRecipe::new).forEach(registry::addRecipe);
+
+        if (ModList.get().isLoaded("not_enough_glyphs")) {
+            manager.getAllRecipesFor(AURecipeRegistry.PRESS_TYPE.get()).stream().map(EmiPressRecipe::new).forEach(registry::addRecipe);
+        }
     }
 }

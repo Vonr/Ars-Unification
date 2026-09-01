@@ -43,10 +43,11 @@ public class JeiArsUnificationPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registry) {
         var gui = registry.getJeiHelpers().getGuiHelper();
 
-        registry.addRecipeCategories(
-                new CutRecipeCategory(gui),
-                new PressRecipeCategory(gui)
-        );
+        registry.addRecipeCategories(new CutRecipeCategory(gui));
+
+        if (ModList.get().isLoaded("not_enough_glyphs")) {
+            registry.addRecipeCategories(new PressRecipeCategory(gui));
+        }
     }
 
     @SuppressWarnings("unchecked")
