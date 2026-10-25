@@ -12,7 +12,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.qther.ars_unification.Config;
 import dev.qther.ars_unification.compat.AUArsTechnicaCompat;
 import dev.qther.ars_unification.mixin.ars_nouveau.AbstractEffectMixin;
-import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
+import dev.qther.ars_unification.util.GenericRecipeCache;
 import dev.qther.ars_unification.util.ItemUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +59,7 @@ public class EffectFlattenMixin extends AbstractEffectMixin {
             }
 
             List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, new AABB(BlockPos.containing(rayTraceResult.getLocation())).inflate(aoeBuff + 1.0));
-            ItemUtil.processItems(level, itemEntities, limit, AURecipeRegistry.PRESS_TYPE.get(), r -> r.getRolledOutputs(resolver, spellStats, level.random));
+            ItemUtil.processItems(level, itemEntities, limit, GenericRecipeCache.PRESS_CACHE, resolver, spellStats);
         } else {
             original.call(rayTraceResult, world, shooter, spellStats, spellContext, resolver);
         }

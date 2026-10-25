@@ -1,34 +1,19 @@
 package dev.qther.ars_unification.util;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.SpecialSingleInputRecipe;
-import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import dev.qther.ars_unification.recipe.IRandomOutputRecipe;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class ItemUtil {
-    public static final Hash.Strategy<ItemStack> COUNT_INSENSITIVE_HASH_STRATEGY = new Hash.Strategy<ItemStack>() {
-        @Override
-        public int hashCode(ItemStack o) {
-            var itemHash = o.getItem().hashCode();
-            itemHash ^= o.getComponents().hashCode() + 0x9e3779b9 + (itemHash << 6) + (itemHash >> 2);
-            return itemHash;
-        }
-
-        @Override
-        public boolean equals(ItemStack a, ItemStack b) {
-            return (a == null && b == null) || (a != null && b != null && ItemStack.isSameItemSameComponents(a, b));
-        }
-    };
-
     public static void drop(ServerLevel level, ItemStack stack, Vec3 pos) {
         if (stack.isEmpty()) {
             return;
@@ -36,12 +21,12 @@ public class ItemUtil {
 
         var maxSize = stack.getMaxStackSize();
         while (!stack.isEmpty()) {
-            level.addFreshEntity(new ItemEntity(level, pos.x, pos.y, pos.z, stack.copyWithCount(Math.min(maxSize, stack.getCount()))));
-            stack.shrink(maxSize);
+            var split = stack.split(maxSize);
+            level.addFreshEntity(new ItemEntity(level, pos.x, pos.y, pos.z, split));
         }
     }
 
-    public static <R extends SpecialSingleInputRecipe> void processItems(ServerLevel level, List<ItemEntity> itemEntities, int limit, RecipeType<R> type, Function<R, List<ItemStack>> outputExtractor) {
+    public static <R extends SpecialSingleInputRecipe & IRandomOutputRecipe> void processItems(ServerLevel level, List<ItemEntity> itemEntities, int limit, GenericRecipeCache<R, SingleRecipeInput> recipeCache, SpellResolver resolver, SpellStats spellStats) {
         if (itemEntities.isEmpty()) {
             return;
         }
@@ -49,38 +34,44 @@ public class ItemUtil {
         RecipeHolder<R> recipe = null;
         int itemsProcessed = 0;
 
-        var results = new ObjectOpenCustomHashSet<>(8, COUNT_INSENSITIVE_HASH_STRATEGY);
+        var output = new ItemCollection();
 
-        for (ItemEntity entity : itemEntities) {
+        for (var entity : itemEntities) {
             if (itemsProcessed >= limit) {
                 break;
             }
 
-            ItemStack stack = entity.getItem();
-            recipe = level.getRecipeManager().getRecipeFor(type, new SingleRecipeInput(stack), level, recipe).orElse(null);
-            if (recipe == null) {
-                continue;
-            }
-
-            while (!stack.isEmpty() && itemsProcessed < limit) {
-                List<ItemStack> outputs = outputExtractor.apply(recipe.value());
-                stack.shrink(1);
-                itemsProcessed++;
-                for (ItemStack result : outputs) {
-                    var existing = results.get(result);
-                    if (existing != null) {
-                        existing.setCount(result.getCount() + existing.getCount());
-                    } else {
-                        results.add(result);
-                    }
+            var stack = entity.getItem();
+            if (recipe == null || !recipe.value().matches(stack, level)) {
+                recipe = recipeCache.get(level, new SingleRecipeInput(stack));
+                if (recipe == null) {
+                    continue;
                 }
             }
 
-            for (var result : results) {
-                ItemUtil.drop(level, result, entity.position());
+            if (!stack.isEmpty()) {
+                var rolls = Math.min(stack.getCount(), limit - itemsProcessed);
+                if (recipe.value().isOutputDeterministic()) {
+                    recipe.value().rollOutputs(s -> output.add(s, s.getCount() * rolls), resolver, spellStats, level.random);
+                } else {
+                    for (int roll = 0; roll < rolls; roll++) {
+                        recipe.value().rollOutputs(output::add, resolver, spellStats, level.random);
+                    }
+                }
+                stack.shrink(rolls);
+                itemsProcessed += rolls;
             }
 
-            results.clear();
+            var resultIter = output.iterator();
+            while (resultIter.hasNext()) {
+                level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), resultIter.next()));
+            }
+            output.clear();
+
+            // Remove item entity to prevent further actions (e.g. Pickup) in the same tick from doing unnecessary work
+            if (stack.isEmpty()) {
+                entity.discard();
+            }
         }
     }
 }

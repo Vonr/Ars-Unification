@@ -24,35 +24,45 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public record PressRecipe(
         Ingredient input,
         List<PressOutput> outputs,
         boolean skipBlockPlace
-) implements SpecialSingleInputRecipe {
+) implements SpecialSingleInputRecipe, IRandomOutputRecipe {
 
     public PressRecipe(Ingredient input, List<PressOutput> outputs) {
         this(input, outputs, false);
     }
 
-    public List<ItemStack> getRolledOutputs(SpellResolver resolver, SpellStats spellStats, RandomSource random) {
-        List<ItemStack> finalOutputs = new ArrayList<>();
-        for (PressOutput pressRoll : outputs) {
-            var doubleFromTechnica = pressRoll.chance < 1.0 && ModList.get().isLoaded("ars_technica") && Config.CONFIG.ARS_TECHNICA_TRANSMUTATION_FOCUS_PRESS_CHANCE_OUTPUT_DOUBLING.get() && AUArsTechnicaCompat.shouldDoubleOutputs(resolver);
+    @Override
+    public void rollOutputs(Consumer<ItemStack> consumer, SpellResolver resolver, SpellStats spellStats, RandomSource random) {
+        for (var roll : outputs) {
+            var doubleFromTechnica = roll.chance < 1.0 && ModList.get().isLoaded("ars_technica") && Config.CONFIG.ARS_TECHNICA_TRANSMUTATION_FOCUS_PRESS_CHANCE_OUTPUT_DOUBLING.get() && AUArsTechnicaCompat.shouldDoubleOutputs(resolver);
 
-            if (random.nextDouble() <= pressRoll.chance) {
-                int num = pressRoll.maxRange > 1 ? random.nextInt(pressRoll.maxRange) + 1 : 1;
+            if (random.nextDouble() <= roll.chance) {
+                int num = roll.maxRange > 1 ? random.nextInt(roll.maxRange) + 1 : 1;
                 for (int i = 0; i < num; i++) {
                     if (doubleFromTechnica) {
-                        finalOutputs.add(pressRoll.stack.copyWithCount(Math.min(pressRoll.stack.getMaxStackSize(), pressRoll.stack.getCount() * 2)));
+                        consumer.accept(roll.stack.copyWithCount(Math.min(roll.stack.getMaxStackSize(), roll.stack.getCount() * 2)));
                     } else {
-                        finalOutputs.add(pressRoll.stack.copy());
+                        consumer.accept(roll.stack.copy());
                     }
                 }
             }
         }
+    }
 
-        return finalOutputs;
+    @Override
+    public boolean isOutputDeterministic() {
+        for (var output : outputs) {
+            if (!output.isDeterministic()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean shouldSkipBlockPlace() {
@@ -87,6 +97,10 @@ public record PressRecipe(
                 Codec.FLOAT.fieldOf("chance").forGetter(PressOutput::chance),
                 Codec.INT.fieldOf("maxRange").forGetter(PressOutput::maxRange)
         ).apply(instance, PressOutput::new));
+
+        public boolean isDeterministic() {
+            return this.chance >= 1.0 && this.maxRange <= 1;
+        }
     }
 
     public static class Serializer implements RecipeSerializer<PressRecipe> {

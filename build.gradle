@@ -10,14 +10,17 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+
     maven {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
+
     maven {
         name = "ModMaven"
         url = "https://modmaven.dev/"
     }
+
     maven {
         name = 'GeckoLib'
         url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
@@ -25,22 +28,27 @@ repositories {
             includeGroup("software.bernie.geckolib")
         }
     }
+
     maven {
         name = 'Forge'
         url = "https://maven.minecraftforge.net"
     }
+
     maven {
         name = "Shatterbyte"
         url = uri("https://maven.shatterbyte.com/releases")
     }
+
     maven {
         name = "Illusive Soulworks maven"
         url = "https://maven.theillusivec4.top/"
     }
+
     maven {
         name = "EnderIO"
         url = "https://maven.rover656.dev/releases"
     }
+
     maven {
         name "Cyclops Repo"
         url "https://maven.pkg.github.com/CyclopsMC/packages"
@@ -49,14 +57,17 @@ repositories {
             password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY") ?: System.getenv("GITHUB_TOKEN")
         }
     }
+
     maven {
         name = "saps.dev"
         url = "https://maven.saps.dev/releases"
     }
+
     maven {
         name = "shedaniel"
         url = "https://maven.shedaniel.me"
     }
+
     maven {
         name = "klikli"
         url = "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
@@ -64,6 +75,7 @@ repositories {
             includeGroup "com.klikli_dev"
         }
     }
+
     maven {
         name = "SBL Maven"
         url "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
@@ -71,10 +83,33 @@ repositories {
             includeGroup "net.tslat.smartbrainlib"
         }
     }
+
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/releases"
     }
+
+    maven {
+        name = 'GeckoLib'
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup "software.bernie.geckolib"
+        }
+    }
+
+    maven {
+        name = "Fuzs Mod Resources"
+        url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
+        content {
+            includeGroup "fuzs.forgeconfigapiport"
+        }
+    }
+
+    maven {
+        name = "Team Resourceful"
+        url = "https://maven.teamresourceful.com/repository/maven-public/"
+    }
+
     exclusiveContent {
         forRepository {
             maven {
@@ -85,6 +120,7 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
     exclusiveContent {
         forRepository {
             maven {
@@ -183,6 +219,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "com.hollingsworth.ars_nouveau:ars_nouveau-${project.minecraft_version}:${project.ars_version}"
+    implementation "com.hollingsworth.nuggets:nuggets-neoforge-1.21.1:${project.nuggets_version}"
 
     implementation "com.alexthw.not_enough_glyphs:not_enough_glyphs-1.21.1:${project.neg_version}"
 
