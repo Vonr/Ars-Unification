@@ -5,7 +5,16 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.registry.RecipeRegistry;
 import dev.qther.ars_unification.processors.Processor;
-import dev.qther.ars_unification.processors.crush.*;
+import dev.qther.ars_unification.processors.crush.AE2InscriberProcesser;
+import dev.qther.ars_unification.processors.crush.ActuallyAdditionsCrusherProcessor;
+import dev.qther.ars_unification.processors.crush.EnderIOSAGMillProcessor;
+import dev.qther.ars_unification.processors.crush.ImmersiveEngineeringCrusherProcessor;
+import dev.qther.ars_unification.processors.crush.IntegratedDynamicsSqueezerProcessor;
+import dev.qther.ars_unification.processors.crush.MekanismCrusherProcessor;
+import dev.qther.ars_unification.processors.crush.ModernIndustrializationMaceratorProcessor;
+import dev.qther.ars_unification.processors.crush.OccultismCrusherProcessor;
+import dev.qther.ars_unification.processors.crush.OritechFragmentForgeProcessor;
+import dev.qther.ars_unification.processors.crush.OritechPulverizerProcessor;
 import dev.qther.ars_unification.processors.cut.FarmersDelightCuttingBoardProcessor;
 import dev.qther.ars_unification.processors.cut.ImmersiveEngineeringSawmillProcessor;
 import dev.qther.ars_unification.processors.cut.MekanismSawmillProcessor;
@@ -20,6 +29,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -33,7 +45,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Mod(ArsUnification.MODID)
@@ -54,6 +70,29 @@ public class ArsUnification {
 
         AURecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         AURecipeRegistry.RECIPE_TYPES.register(modEventBus);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void addReloadListener(AddReloadListenerEvent event) {
+        event.addListener(new SimplePreparableReloadListener<>() {
+            @Override
+            protected @NotNull Object prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+                return new Object();
+            }
+
+            @Override
+            protected void apply(@NotNull Object object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+                if (!processorsRegistered) {
+                    NeoForge.EVENT_BUS.addListener(new Consumer<ServerTickEvent.Pre>() {
+                        @Override
+                        public void accept(ServerTickEvent.Pre event) {
+                            processRecipes(event.getServer());
+                            NeoForge.EVENT_BUS.unregister(this);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -90,6 +129,8 @@ public class ArsUnification {
             PROCESSORS.add(new ProcessorInfo("immersiveengineering", cfg.IMMERSIVE_ENGINEERING_CRUSHER, ImmersiveEngineeringCrusherProcessor::new));
             PROCESSORS.add(new ProcessorInfo("occultism", cfg.OCCULTISM_CRUSHER, OccultismCrusherProcessor::new));
             PROCESSORS.add(new ProcessorInfo("ae2", cfg.CRUSH_AE2_INSCRIBER, AE2InscriberProcesser::new));
+            PROCESSORS.add(new ProcessorInfo("oritech", cfg.ORITECH_PULVERIZER, OritechPulverizerProcessor::new));
+            PROCESSORS.add(new ProcessorInfo("oritech", cfg.ORITECH_FRAGMENT_FORGE, OritechFragmentForgeProcessor::new));
 
             // Cut
             PROCESSORS.add(new ProcessorInfo("mekanism", cfg.MEKANISM_SAWMILL, MekanismSawmillProcessor::new));

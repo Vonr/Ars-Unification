@@ -28,5 +28,6 @@ Supported mods:
 - [Mekanism](https://www.curseforge.com/minecraft/mc-mods/mekanism) (Crusher, Sawmill)
 - [Modern Industrialization](https://www.curseforge.com/minecraft/mc-mods/modern-industrialization) (Macerator, Cutting Machine, Compressor)
 - [Occultism](https://www.curseforge.com/minecraft/mc-mods/occultism) (Crusher Spirits)
+- [Oritech](https://www.curseforge.com/minecraft/mc-mods/oritech) (Pulverizer, Fragment Forge)
 
 Logo modified from Ars Nouveau's Crush Glyph texture, which can be found [here](https://github.com/baileyholl/Ars-Nouveau/blob/main/src/main/resources/assets/ars_nouveau/textures/item/crush.png).

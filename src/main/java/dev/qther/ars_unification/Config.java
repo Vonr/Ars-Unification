@@ -36,6 +36,8 @@ public class Config {
     public ModConfigSpec.IntValue OCCULTISM_CRUSHER;
     public ModConfigSpec.IntValue OCCULTISM_CRUSHER_TIER;
     public ModConfigSpec.IntValue CRUSH_AE2_INSCRIBER;
+    public ModConfigSpec.IntValue ORITECH_PULVERIZER;
+    public ModConfigSpec.IntValue ORITECH_FRAGMENT_FORGE;
 
     public ModConfigSpec.IntValue MEKANISM_SAWMILL;
     public ModConfigSpec.IntValue MODERN_INDUSTRIALIZATION_CUTTING_MACHINE;
@@ -71,6 +73,8 @@ public class Config {
         OCCULTISM_CRUSHER = builder.comment("Priority of Occultism's Crusher recipes, -1 to disable").defineInRange("occultism.crusher.priority", 115, -1, Integer.MAX_VALUE);
         OCCULTISM_CRUSHER_TIER = builder.comment("Tier to use for Occultism's Crusher").defineInRange("occultism.crusher.tier", 1, 1, 4);
         CRUSH_AE2_INSCRIBER = builder.comment("Priority of AE2's Inscriber recipes, -1 to disable").defineInRange("ae2.inscriber.priority", 20, -1, Integer.MAX_VALUE);
+        ORITECH_PULVERIZER = builder.comment("Priority of Oritech's Pulverizer recipes, -1 to disable").defineInRange("oritech.pulverizer.priority", 105, -1, Integer.MAX_VALUE);
+        ORITECH_FRAGMENT_FORGE = builder.comment("Priority of Oritech's Fragment Forge recipes, -1 to disable").defineInRange("oritech.fragment_forge.priority", -1, -1, Integer.MAX_VALUE);
         builder = builder.pop();
 
         builder = builder.push("cut");

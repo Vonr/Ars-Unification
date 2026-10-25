@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'idea'
-    id 'net.neoforged.moddev' version '2.0.136'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 version = mod_version
@@ -249,6 +249,8 @@ dependencies {
     compileOnly "curse.maven:farmers-delight-398521:${project.farmers_delight_version}"
 
     compileOnly "curse.maven:ars-technica-1096161:${project.ars_technica_version}"
+
+    compileOnly("rearth.oritech:oritech-common-1.21.1:${project.oritech_version}")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

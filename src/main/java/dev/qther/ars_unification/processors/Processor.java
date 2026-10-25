@@ -111,6 +111,10 @@ public abstract class Processor<I extends RecipeInput, T extends Recipe<I>> {
 
     public @Nullable RecipeHolder<?> makeRecipe(Set<Item> existing, RecipeHolder<? extends T> recipeHolder, Ingredient ingredient) {
         var out = this.processCommon(existing, recipeHolder, ingredient);
+        if (out == null) {
+            return null;
+        }
+
         for (var input : ingredient.getItems()) {
             existing.add(input.getItem());
         }

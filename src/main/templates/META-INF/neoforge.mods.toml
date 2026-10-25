@@ -187,3 +187,13 @@ side="BOTH"
     [dependencies."${mod_id}".mc-publish]
     # modrinth = "ars-technica"
     curseforge = "ars-technica"
+
+[[dependencies."${mod_id}"]]
+modId="oritech"
+type="optional"
+versionRange="${oritech_version_range}"
+ordering="AFTER"
+side="BOTH"
+    [dependencies."${mod_id}".mc-publish]
+    modrinth = "oritech"
+    curseforge = "oritech"

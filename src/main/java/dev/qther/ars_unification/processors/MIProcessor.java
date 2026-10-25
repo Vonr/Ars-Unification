@@ -1,16 +1,12 @@
 package dev.qther.ars_unification.processors;
 
 import aztech.modern_industrialization.machines.recipe.MachineRecipe;
-import dev.qther.ars_unification.ArsUnification;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> {
     public Fluid[] ignoredFluids;
@@ -36,8 +32,17 @@ public abstract class MIProcessor extends Processor<RecipeInput, MachineRecipe> 
 
         for (var fluidIn : recipe.fluidInputs) {
             var fluidStacks = fluidIn.fluid().getStacks();
-            var isIgnored = fluidStacks.length == 0;
+            if (fluidStacks.length == 0) {
+                continue;
+            }
+
+            var isIgnored = false;
             fluidIngredients: for (var fluid : fluidStacks) {
+                if (fluid.isEmpty()) {
+                    isIgnored = true;
+                    break;
+                }
+
                 for (var ignored : ignoredFluids) {
                     if (fluid.is(ignored)) {
                         isIgnored = true;
