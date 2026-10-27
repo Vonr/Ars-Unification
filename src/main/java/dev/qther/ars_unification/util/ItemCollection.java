@@ -33,8 +33,7 @@ public class ItemCollection {
             return map.getOrDefault(new ItemStackKey(stack, true), 0);
         }
 
-        //noinspection AutoBoxing,UnnecessaryUnboxing
-        return map.computeInt(new ItemStackKey(stack, true), (k, v) -> v == null ? count : v.intValue() + count);
+        return map.computeInt(new ItemStackKey(stack, true), (k, v) -> v == null ? count : v + count);
     }
 
     public void clear() {
