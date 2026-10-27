@@ -26,6 +26,14 @@ public class ItemUtil {
         }
     }
 
+    public static void replaceItemEntity(ItemEntity entity, ItemStack stack) {
+        var level = entity.level();
+        entity.setItem(stack);
+        entity.setDeltaMovement(level.random.nextDouble() * 0.2 - 0.1, 0.2, level.random.nextDouble() * 0.2 - 0.1);
+        entity.lifespan = entity.getAge() + 6000;
+        entity.setPickUpDelay(0);
+    }
+
     public static <R extends SpecialSingleInputRecipe & IRandomOutputRecipe> void processItems(ServerLevel level, List<ItemEntity> itemEntities, int limit, GenericRecipeCache<R, SingleRecipeInput> recipeCache, SpellResolver resolver, SpellStats spellStats) {
         if (itemEntities.isEmpty()) {
             return;
@@ -42,6 +50,10 @@ public class ItemUtil {
             }
 
             var stack = entity.getItem();
+            if (stack.isEmpty()) {
+                continue;
+            }
+
             if (recipe == null || !recipe.value().matches(stack, level)) {
                 recipe = recipeCache.get(level, new SingleRecipeInput(stack));
                 if (recipe == null) {
@@ -49,22 +61,26 @@ public class ItemUtil {
                 }
             }
 
-            if (!stack.isEmpty()) {
-                var rolls = Math.min(stack.getCount(), limit - itemsProcessed);
-                if (recipe.value().isOutputDeterministic()) {
-                    recipe.value().rollOutputs(s -> output.add(s, s.getCount() * rolls), resolver, spellStats, level.random);
-                } else {
-                    for (int roll = 0; roll < rolls; roll++) {
-                        recipe.value().rollOutputs(output::add, resolver, spellStats, level.random);
-                    }
+            var rolls = Math.min(stack.getCount(), limit - itemsProcessed);
+            if (recipe.value().isOutputDeterministic()) {
+                recipe.value().rollOutputs(s -> output.add(s, s.getCount() * rolls), resolver, spellStats, level.random);
+            } else {
+                for (int roll = 0; roll < rolls; roll++) {
+                    recipe.value().rollOutputs(output::add, resolver, spellStats, level.random);
                 }
-                stack.shrink(rolls);
-                itemsProcessed += rolls;
             }
 
-            var resultIter = output.iterator();
-            while (resultIter.hasNext()) {
-                level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), resultIter.next()));
+            stack.shrink(rolls);
+            itemsProcessed += rolls;
+
+            var outputIter = output.iterator();
+            if (stack.isEmpty() && outputIter.hasNext())  {
+                stack = outputIter.next();
+                replaceItemEntity(entity, stack);
+            }
+
+            while (outputIter.hasNext()) {
+                level.addFreshEntity(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), outputIter.next()));
             }
             output.clear();
 
