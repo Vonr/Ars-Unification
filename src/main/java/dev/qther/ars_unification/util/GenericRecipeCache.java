@@ -4,6 +4,7 @@ import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.recipe.CutRecipe;
 import dev.qther.ars_unification.recipe.PressRecipe;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +18,13 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     public static final GenericRecipeCache<CutRecipe, SingleRecipeInput> CUT_CACHE = new GenericRecipeCache<>(AURecipeRegistry.CUT_TYPE.get(), 8);
     public static final GenericRecipeCache<PressRecipe, SingleRecipeInput> PRESS_CACHE = new GenericRecipeCache<>(AURecipeRegistry.PRESS_TYPE.get(), 8);
@@ -118,7 +121,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
         }
 
         @Override
-        public @NotNull ItemStack assemble(@NotNull I input, HolderLookup.@NotNull Provider registries) {
+        public ItemStack assemble(I input, HolderLookup.Provider registries) {
             return ItemStack.EMPTY;
         }
 
@@ -128,17 +131,17 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
         }
 
         @Override
-        public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
+        public ItemStack getResultItem(HolderLookup.Provider registries) {
             return ItemStack.EMPTY;
         }
 
         @Override
-        public @NotNull RecipeSerializer<?> getSerializer() {
+        public RecipeSerializer<?> getSerializer() {
             return RecipeSerializer.SHAPELESS_RECIPE;
         }
 
         @Override
-        public @NotNull RecipeType<?> getType() {
+        public RecipeType<?> getType() {
             return RecipeType.CRAFTING;
         }
     }
