@@ -1,5 +1,6 @@
 package dev.qther.ars_unification.util;
 
+import dev.qther.ars_unification.ArsUnification;
 import dev.qther.ars_unification.recipe.CutRecipe;
 import dev.qther.ars_unification.recipe.PressRecipe;
 import dev.qther.ars_unification.setup.registry.AURecipeRegistry;
@@ -109,7 +110,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     }
 
     record EmptyResultRecipe<I extends RecipeInput>(RecipeInput input) implements Recipe<I> {
-        public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("invasiveopts", "empty");
+        public static final ResourceLocation ID = ArsUnification.prefix("empty");
 
         @Override
         public boolean matches(I input, Level level) {
