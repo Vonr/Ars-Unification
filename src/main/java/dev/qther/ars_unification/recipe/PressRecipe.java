@@ -45,7 +45,7 @@ public record PressRecipe(
                 int num = roll.maxRange > 1 ? random.nextInt(roll.maxRange) + 1 : 1;
                 for (int i = 0; i < num; i++) {
                     if (doubleFromTechnica) {
-                        consumer.accept(roll.stack.copyWithCount(Math.min(roll.stack.getMaxStackSize(), roll.stack.getCount() * 2)));
+                        consumer.accept(roll.stack.copyWithCount(roll.stack.getCount() * 2));
                     } else {
                         consumer.accept(roll.stack.copy());
                     }
