@@ -29,7 +29,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
     protected ArrayDeque<RecipeHolder<? extends Recipe<I>>> cache;
     protected int size;
 
-    protected int ticksAboveSize = 0;
+    protected int ticksAboveSize = 0b0000_0000_0000_0000_0000_0000_0000_0000;
     protected int additionsThisTick = 0;
 
     public GenericRecipeCache(RecipeType<R> recipeType, int size) {
@@ -48,8 +48,8 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
 
     protected void onServerTick(ServerTickEvent.Post event) {
         if (this.additionsThisTick > this.size) {
-            this.ticksAboveSize++;
-            if (this.ticksAboveSize > 20) {
+            this.ticksAboveSize = (this.ticksAboveSize << 1) + 1;
+            if (Integer.bitCount(this.ticksAboveSize) >= 16) {
                 var highestBit = Integer.highestOneBit(this.additionsThisTick);
                 if (this.additionsThisTick == highestBit) {
                     this.size = this.additionsThisTick;
@@ -62,7 +62,7 @@ public class GenericRecipeCache<R extends Recipe<I>, I extends RecipeInput> {
                 this.cache = newCache;
             }
         } else {
-            this.ticksAboveSize = 0;
+            this.ticksAboveSize <<= 1;
         }
 
         this.additionsThisTick = 0;
